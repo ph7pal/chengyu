@@ -1021,14 +1021,35 @@ class zmf {
         return $x;
     }
 
-    public static function tw_zh($str) {
+    /**
+     * 繁体转简体
+     * @param type $str
+     * @return string
+     */
+    public static function twTozh($str) {
         if (!$str) {
             return '';
         }
-        Yii::import('application.vendors.*');
+        Yii::import('application.vendors.zhtw.*');
         require_once 'zhtw.php';
         $zhtw = new zhtw();
         $str = $zhtw->tw_zh($str);
+        return $str;
+    }
+    
+    /**
+     * 简体转繁体
+     * @param type $str
+     * @return string
+     */
+    public static function zhTotw($str) {
+        if (!$str) {
+            return '';
+        }
+        Yii::import('application.vendors.zhtw.*');
+        require_once 'zhtw.php';
+        $zhtw = new zhtw();
+        $str = $zhtw->zh_tw($str);
         return $str;
     }
 

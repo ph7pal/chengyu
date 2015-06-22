@@ -22,7 +22,7 @@ class assets {
             'action' => Yii::app()->getController()->getAction()->id,
             'module' => $module,
             'reputation' => 'false',
-            'loginHtml' => $this->renderPartial('//common/notLoginInfo', NULL, true),
+            'loginHtml' => '',
             'reportUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/report'),
             'delUploadImgUrl' => zmf::config('domain') . Yii::app()->createUrl('/attachments/delUploadImg'),
             'csrfToken' => Yii::app()->request->csrfToken,
@@ -30,22 +30,11 @@ class assets {
             'allowImgTypes' => zmf::config('imgAllowTypes'),
             'allowImgPerSize' => tools::formatBytes(zmf::config('imgMaxSize')),
             'perAddImgNum' => zmf::config('imgUploadNum'),
-            'delPostUrl' => zmf::config('domain') . Yii::app()->createUrl('/del/delPost'), //删除帖子
-            'addTagsUrl' => zmf::config('domain') . Yii::app()->createUrl('/tags/foradd'),
-            'setStatusUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/setstatus'),
-            'favorUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/favor'),
-            'favoriteUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/favorite'),
             'searchUrl' => zmf::config('domain') . Yii::app()->createUrl('/search/suggest'),
             'searchPage' => zmf::config('domain') . Yii::app()->createUrl('/search/index'),
             'commentsUrl' => zmf::config('domain') . Yii::app()->createUrl('/comments/lists'), //获取评论列表
             'addCommentsUrl' => zmf::config('domain') . Yii::app()->createUrl('/comments/add'), //写评论
-            'checkReputationUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/reputation'), //判断声望值
-            'cardLink_user' => zmf::config('domain') . Yii::app()->createUrl('/ajax/card', array('type' => 'user')), //用户的卡片
-            'favorUserLink' => zmf::config('domain') . Yii::app()->createUrl('/ajax/favorUser'), //关注用户
             'feedbackUrl' => zmf::config('domain') . Yii::app()->createUrl('/feed/add'), //用户反馈
-            'redirectPoiUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/redpoi'), //坐标重定向
-            'combineCookieUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/mergecookie'), //合并cookie
-            'rateJson' => Area::getRates(), //汇率
         );
         $attrs = $arr[$type];
         $longHtml = '<script>var zmf={';

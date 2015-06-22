@@ -1,3 +1,6 @@
+html,body{
+    background-color: #F2F1E3;
+}
 body,input,button,select,textarea{
     font-size:12px;
     line-height: 1.6;
@@ -75,30 +78,35 @@ a:hover.move{
     background-position:100% -44px
 }
 .wrapper{
-    width:960px;
-    margin:0 auto
+    width:640px;
+    margin:0 auto;
+    background-color: #FFF;
+    border: 1px solid #e1dfdf;
+    border-radius: 3px;
+    box-shadow: 0 2px 1px -1px #d1d4d7;
 }
 .header-top{
-    height: 100px;
-
-}
-.header-top form{
-    padding-top: 30px
+    width: 100%;
+    background: #D1CFA9;
 }
 .header-logo{
+    width: 640px;
+    height: 100px;
+    margin: 0 auto;
     font-size: 48px;
     padding-top: 10px;        
-    color:#47a447
+    color:#E6E5C9;
+    text-align: center
 }
 .header-logo a{
-    color:#47a447
+    color:#E6E5C9
 }
 .header-logo a:hover{
     text-decoration: none;
 }
 .header-ppt{
     position: relative;
-    min-width: 960px;
+    min-width: 640px;
     width: 100%;
     margin: 0 auto;
     max-width: 2560px;
@@ -112,7 +120,7 @@ a:hover.move{
     position: absolute;
     width: 100%;
     height: 500px;
-    min-width: 960px;
+    min-width: 640px;
     height: 500px;
     left: 0;
     top: 0;
@@ -137,7 +145,7 @@ a:hover.move{
     position: absolute;
     top: 0;
     left: 50%;
-    width: 960px;
+    width: 640px;
     margin-left: -480px;
 }
 /*搜索浮层*/
@@ -250,7 +258,7 @@ a:hover.move{
 }
 /*个人主页左右宽度*/
 .main{
-    border-right: 1px solid #eeeeee;width:600px;padding-right: 20px;float:left
+    border-right: 1px solid #eeeeee;width:640px;padding-right: 20px;float:left
 }
 .aside{
     width: 320px;float:right
@@ -313,14 +321,15 @@ span.required,.errorMessage{
 }
 .navbar{
     padding:0;
-    margin-bottom: 0px 
+    margin-bottom: 0px ;
+    box-shadow: 0 4px 4px -3px #d1d1d1;
 }
 .container .navbar-header,.container .navbar-collapse{
     margin-right:0;
     margin-left:0
 }
 .container{
-    width:960px !important
+    width:640px !important
 }
 .navbar-header{
     float:left
@@ -371,28 +380,28 @@ span.required,.errorMessage{
     color:#333
 }
 .navbar-default{
-    background: #47a447;
+    background: #E6E5C9;
     border:none;
 }
 .navbar-default .navbar-collapse, .navbar-default .navbar-form {
     border: none;
 }
 .navbar-default .navbar-nav>li>a {
-    color: #FFF;
+    color: #000;
 }
 .navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus {
-    background:  #449d44;
-    color: #FFF
+    background:  #D1CFA9;
+    color: #000
 }
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
     color: #FFF;
 }
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus {
-    background-color: #449d44;
+    background-color: #D1CFA9;
     color: #FFF;
 }
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
-    background-color: #449d44;
+    background-color: #D1CFA9;
 }
 /* Template-specific stuff
  *
@@ -404,7 +413,7 @@ span.required,.errorMessage{
 body,
 .navbar-fixed-top,
 .navbar-fixed-bottom {
-    min-width: 960px;
+    min-width: 640px;
 }
 
 /* Don't let the lead text change font-size. */
@@ -431,7 +440,7 @@ body,
 
 /* Reset the container */
 .container {
-    width: 960px;
+    width: 640px;
     max-width: none !important;
 }
 
@@ -572,7 +581,7 @@ body,
 /**
 *重写分页样式
 */
-ul.yiiPager{height:26px;margin:0;padding:0}ul.yiiPager li{display:inline;margin:0 4px 0 0}ul.yiiPager a:link,ul.yiiPager a:visited{padding:5px 9px;border:1px solid #ccc;border-radius:3px;background:#fff;color:#777;font-weight:normal}ul.yiiPager a:hover{border-color:#449d44;box-shadow:1px 1px 1px #333;color:#035d67;text-decoration:none}ul.yiiPager .selected a{padding:6px 10px;border:0;border-radius:3px;background:#449d44;color:#fff}ul.yiiPager .hidden{display:none}
+ul.yiiPager{height:26px;margin:0;padding:0}ul.yiiPager li{display:inline;margin:0 4px 0 0}ul.yiiPager a:link,ul.yiiPager a:visited{padding:5px 9px;border:1px solid #ccc;border-radius:3px;background:#fff;color:#777;font-weight:normal}ul.yiiPager a:hover{border-color:#D1CFA9;box-shadow:1px 1px 1px #333;color:#035d67;text-decoration:none}ul.yiiPager .selected a{padding:6px 10px;border:0;border-radius:3px;background:#D1CFA9;color:#fff}ul.yiiPager .hidden{display:none}
 /*
 *赞
 */
@@ -694,7 +703,7 @@ a.favorited:hover{
     font-size: 75%;
     font-weight: bold;
     line-height: 1;
-    color: #47a447;
+    color: #E6E5C9;
     text-align: center;
     white-space: nowrap;
     vertical-align: baseline;
@@ -704,7 +713,7 @@ a.favorited:hover{
     margin-right: 5px;
 }
 .list-tag a,.list-tag a:hover{
-    color: #47a447;
+    color: #E6E5C9;
 }
 .toggle-btn{
     cursor: pointer;
@@ -740,7 +749,7 @@ a.favorited:hover{
 
 }
 .answer-body{
-    width:600px;float:left
+    width:640px;float:left
 }
 .btn-answer{
     width:40px;
@@ -814,7 +823,7 @@ a.favorited:hover{
     display: none;
     position: absolute;
     z-index: 99;
-    border: 2px solid #47a447;
+    border: 2px solid #E6E5C9;
     border-width: 0 2px 2px 2px;
     -moz-box-shadow:0 2px 4px 0 rgba(0,0,0,0.1);
     -webkit-box-shadow:0 2px 4px 0 rgba(0,0,0,0.1);
@@ -825,7 +834,7 @@ a.favorited:hover{
     color: #000;
 }
 .nav-float-holder .color-bold a{
-    color: #47a447
+    color: #E6E5C9
 }
 .nav-float-holder a .nav-item:hover{
     color: #5cb85c
@@ -855,14 +864,14 @@ a.favorited:hover{
 /**
 *登录注册页面的轮播
 */
-.slideBox{ width:600px; height:300px; overflow:hidden; position:relative; border:1px solid #ddd;  }
+.slideBox{ width:640px; height:300px; overflow:hidden; position:relative; border:1px solid #ddd;  }
 .slideBox .hd{ height:15px; overflow:hidden; position:absolute; right:5px; bottom:5px; z-index:1; }
 .slideBox .hd ul{ overflow:hidden; zoom:1; float:left;  }
 .slideBox .hd ul li{ float:left; margin-right:2px;  width:15px; height:15px; line-height:14px; text-align:center; background:#fff; cursor:pointer; }
 .slideBox .hd ul li.on{ background:#f00; color:#fff; }
 .slideBox .bd{ position:relative; height:100%; z-index:0;   }
 .slideBox .bd li{ zoom:1; vertical-align:middle; }
-.slideBox .bd img{ width:600px; height:300px; display:block;  }
+.slideBox .bd img{ width:640px; height:300px; display:block;  }
 /*快速登录*/
 .quick-login-bar{
     clear:both
@@ -878,7 +887,7 @@ a.favorited:hover{
     overflow: hidden;
     z-index: 99999;
     width: 100%;
-    border:1px solid #47a447
+    border:1px solid #E6E5C9
 }
 
 .ac_results ul {
@@ -918,7 +927,7 @@ a.favorited:hover{
 }
 
 .ac_over {
-    background-color: #47a447;
+    background-color: #E6E5C9;
     color: white;
 }
 /*更多回答*/
@@ -982,7 +991,7 @@ a.favorited:hover{
 }
 .side-fixed a:hover{
     text-decoration: none;
-    color:#47a447
+    color:#E6E5C9
 }
 .feedback{bottom:10px;}
 .feedback a{font-size: 24px;}

@@ -64,7 +64,7 @@ return array(
         'errorHandler' => array(
             'errorAction' => 'error/index',
         ),
-        'urlManager' => $rewrite,
+//        'urlManager' => $rewrite,
         'filecache' => array(
             'class' => 'system.caching.CFileCache',
             'directoryLevel' => '2', //缓存文件的目录深度  
