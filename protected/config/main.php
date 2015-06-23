@@ -1,21 +1,8 @@
 <?php
 
-$host = $_SERVER['HTTP_HOST'];
-$cururl = $_SERVER["REQUEST_URI"];
-if ($host == 'blog.newsoul.cn' || strpos($cururl, 'blog')) {
-    $rewrite = require('rewrite_blog.php');
-} elseif ($host == 'gongyi.newsoul.org.cn' || $host == 'www.newsoul.org.cn' || strpos($cururl, 'gongyi')) {
-    $rewrite = require('rewrite_gongyi.php');
-} elseif ($host == 'naodong.org' || $host == 'www.naodong.org' || strpos($cururl, 'naodong')) {
-    $rewrite = require('rewrite_naodong.php');
-} elseif (strpos($cururl, 'game')) {
-    $rewrite = array();
-} else {
-    $rewrite = require('rewrite.php');
-}
+$rewrite = require('rewrite.php');
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-    'name' => '新灵旅行',
     'theme' => 'web',
     'preload' => array('log'),
     'onBeginRequest' => create_function('$event', 'return ob_start("ob_gzhandler");'),

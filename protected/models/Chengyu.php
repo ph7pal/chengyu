@@ -35,6 +35,7 @@ class Chengyu extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('title', 'required'),            
+            array('title', 'unique'),            
             array('title, title_tw, pinyin, yufa', 'length', 'max' => 255),
             array('hash', 'length', 'max' => 32),
             array('firstChar', 'length', 'max' => 1),
@@ -66,6 +67,10 @@ class Chengyu extends CActiveRecord {
         return array(
             'fanYiCis' => array(self::HAS_MANY, 'ChengyuCi', 'cid', 'condition' => 'classify="'.ChengyuCi::CLASSIFY_FANYICI.'"', 'order' => 'id ASC'),//反义词
             'tongYiCis' => array(self::HAS_MANY, 'ChengyuCi', 'cid', 'condition' => 'classify="'.ChengyuCi::CLASSIFY_TONGYICI.'"', 'order' => 'id ASC'),//同义词
+            'jieShis' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_JIESHI.'"', 'order' => 'id ASC'),//解释
+            'chuChus' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_CHUCHU.'"', 'order' => 'id ASC'),//出处
+            'liJus' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_LIJU.'"', 'order' => 'id ASC'),//例句
+            'guShis' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_GUSHI.'"', 'order' => 'id ASC'),//故事
         );
     }
 

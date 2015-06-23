@@ -23,6 +23,8 @@ class assets {
             'module' => $module,
             'reputation' => 'false',
             'loginHtml' => '',
+            'addCiUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/addCi'),//添加同义词
+            'delCiUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/delCi'),//删除同义词
             'reportUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/report'),
             'delUploadImgUrl' => zmf::config('domain') . Yii::app()->createUrl('/attachments/delUploadImg'),
             'csrfToken' => Yii::app()->request->csrfToken,

@@ -12,47 +12,77 @@ class ChengyuController extends Q {
         ));
     }
 
-    /**
-     * Creates a new model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     */
-    public function actionCreate() {
-        $model = new Chengyu;
-
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
+    public function actionCreate($id = '') {
+        if ($id) {
+            $model = $this->loadModel($id);
+        } else {
+            $model = new Chengyu;
+        }
         if (isset($_POST['Chengyu'])) {
             $model->attributes = $_POST['Chengyu'];
-            if ($model->save())
+            if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->id));
+            }
         }
-
         $this->render('create', array(
             'model' => $model,
         ));
     }
 
-    /**
-     * Updates a particular model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id the ID of the model to be updated
-     */
     public function actionUpdate($id) {
-        $model = $this->loadModel($id);
+        $this->actionCreate($id);
+    }
 
-        // Uncomment the following line if AJAX validation is needed
-        // $this->performAjaxValidation($model);
-
-        if (isset($_POST['Chengyu'])) {
-            $model->attributes = $_POST['Chengyu'];
-            if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+    /**
+     * 为成语添加同义词、反义词
+     */
+    public function actionCi($id) {
+        $info = $this->loadModel($id);
+        $type = tools::val('type', 't', 1);
+        if ($type == 'tongyi') {
+            $relations = $info->tongYiCis;
+        } else {
+            $relations = $info->fanYiCis;
         }
-
-        $this->render('update', array(
+        $data = array(
+            'info' => $info,
+            'type' => $type,
+            'relations' => $relations,
+        );
+        $this->render('ci', $data);
+    }
+    
+    public function actionContent($id){
+        $info = $this->loadModel($id);
+        $type = tools::val('type', 't', 1);
+        switch ($type){
+            case 'jieshi':
+                $relations=$info->jieShis;
+                $_classify=  ChengyuContent::CLASSIFY_JIESHI;
+                break;
+            case 'chuchu':
+                $relations=$info->chuChus;
+                $_classify=  ChengyuContent::CLASSIFY_CHUCHU;
+                break;
+            case 'liju':
+                $relations=$info->liJus;
+                $_classify=  ChengyuContent::CLASSIFY_LIJU;
+                break;
+            case 'gushi':
+                $relations=$info->guShis;
+                $_classify=  ChengyuContent::CLASSIFY_GUSHI;
+                break;
+        }
+        $model=new ChengyuContent;
+        $model->classify=$_classify;
+        $model->cid=$id;
+        $data = array(
+            'info' => $info,
+            'type' => $type,
+            'relations' => $relations,
             'model' => $model,
-        ));
+        );
+        $this->render('content', $data);
     }
 
     /**
