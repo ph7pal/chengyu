@@ -37,8 +37,10 @@ class ChengyuContent extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('cid, uid, content, status, top, hits, comments, favors, cTime, classify', 'required'),
+            array('cid, content, classify', 'required'),
+            array('status', 'default', 'setOnEmpty' => true, 'value' => Posts::STATUS_PASSED),
             array('status, top, classify', 'numerical', 'integerOnly' => true),
+            array('cTime', 'default', 'setOnEmpty' => true, 'value' => zmf::now()),
             array('cid, uid, hits, comments, favors, cTime', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

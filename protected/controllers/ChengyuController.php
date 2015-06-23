@@ -51,31 +51,37 @@ class ChengyuController extends Q {
         );
         $this->render('ci', $data);
     }
-    
-    public function actionContent($id){
+
+    public function actionContent($id) {
         $info = $this->loadModel($id);
         $type = tools::val('type', 't', 1);
-        switch ($type){
+        switch ($type) {
             case 'jieshi':
-                $relations=$info->jieShis;
-                $_classify=  ChengyuContent::CLASSIFY_JIESHI;
+                $relations = $info->jieShis;
+                $_classify = ChengyuContent::CLASSIFY_JIESHI;
                 break;
             case 'chuchu':
-                $relations=$info->chuChus;
-                $_classify=  ChengyuContent::CLASSIFY_CHUCHU;
+                $relations = $info->chuChus;
+                $_classify = ChengyuContent::CLASSIFY_CHUCHU;
                 break;
             case 'liju':
-                $relations=$info->liJus;
-                $_classify=  ChengyuContent::CLASSIFY_LIJU;
+                $relations = $info->liJus;
+                $_classify = ChengyuContent::CLASSIFY_LIJU;
                 break;
             case 'gushi':
-                $relations=$info->guShis;
-                $_classify=  ChengyuContent::CLASSIFY_GUSHI;
+                $relations = $info->guShis;
+                $_classify = ChengyuContent::CLASSIFY_GUSHI;
                 break;
         }
-        $model=new ChengyuContent;
-        $model->classify=$_classify;
-        $model->cid=$id;
+        $model = new ChengyuContent;
+        $model->classify = $_classify;
+        $model->cid = $id;
+        if (isset($_POST['ChengyuContent'])) {
+            $model->attributes = $_POST['ChengyuContent'];
+            if ($model->save()) {
+                $this->redirect(array('view', 'id' => $model->cid));
+            }
+        }
         $data = array(
             'info' => $info,
             'type' => $type,
