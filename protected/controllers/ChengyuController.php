@@ -7,10 +7,11 @@ class ChengyuController extends Q {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
-        $id= zmf::filterInput($id);
-        $info=$this->loadModel($id);
-        $this->pageTitle=$info['title'].' - '.zmf::config('sitename');
-        $this->pageDescription=$info['title'].'的解释、'.$info['title'].'英文翻译、';
+        $id = zmf::filterInput($id);
+        $info = $this->loadModel($id);
+        Posts::updateCount($id, 'Chengyu');
+        $this->pageTitle = $info['title'] . ' - ' . zmf::config('sitename');
+        $this->pageDescription = $info['title'] . '的解释、' . $info['title'] . '英文翻译、';
         $this->render('view', array(
             'model' => $info,
         ));
@@ -57,6 +58,8 @@ class ChengyuController extends Q {
     }
 
     public function actionContent($id) {
+        $id = zmf::filterInput($id); //所属成语的id
+        $cid = tools::val('ccid'); //内容id，chengyu's content id
         $info = $this->loadModel($id);
         $type = tools::val('type', 't', 1);
         switch ($type) {
@@ -77,10 +80,23 @@ class ChengyuController extends Q {
                 $_classify = ChengyuContent::CLASSIFY_GUSHI;
                 break;
         }
-        $model = new ChengyuContent;
-        $model->classify = $_classify;
-        $model->cid = $id;
+        if ($cid) {
+            $model = ChengyuContent::model()->findByPk($cid);
+            if ($model === null) {
+                throw new CHttpException(404, 'The requested page does not exist.');
+            }
+        } else {
+            $model = new ChengyuContent;
+            $model->classify = $_classify;
+            $model->cid = $id;
+        }
         if (isset($_POST['ChengyuContent'])) {
+            if ($model->classify == ChengyuContent::CLASSIFY_GUSHI) {
+                $filter = Posts::handleContent($_POST['ChengyuContent']['content']);
+                $_POST['ChengyuContent']['content'] = $filter['content'];
+            } else {
+                $_POST['ChengyuContent']['content'] = zmf::filterInput($_POST['ChengyuContent']['content'], 't', 1);
+            }
             $model->attributes = $_POST['ChengyuContent'];
             if ($model->save()) {
                 $this->redirect(array('view', 'id' => $model->cid));
@@ -95,11 +111,16 @@ class ChengyuController extends Q {
         $this->render('content', $data);
     }
 
-    /**
-     * Deletes a particular model.
-     * If deletion is successful, the browser will be redirected to the 'admin' page.
-     * @param integer $id the ID of the model to be deleted
-     */
+    public function actionDelcontent($id) {
+        $id=zmf::filterInput($id);
+        $model = ChengyuContent::model()->findByPk($id);
+        if ($model === null) {
+            throw new CHttpException(404, 'The requested page does not exist.');
+        }
+        $model->updateByPk($id, array('status'=>  Posts::STATUS_DELED));
+        $this->redirect(array('chengyu/view','id'=>$model->cid));
+    }
+
     public function actionDelete($id) {
         $this->loadModel($id)->delete();
 
@@ -108,12 +129,13 @@ class ChengyuController extends Q {
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
     }
 
-    /**
-     * Lists all models.
-     */
     public function actionIndex() {
         $criteria = new CDbCriteria();
         $criteria->order = 'cTime DESC';
+        $char=  tools::val('char','t',1);
+        if($char){
+            $criteria->addCondition("firstChar='{$char}'");
+        }
         $count = Chengyu::model()->count($criteria);
         $pager = new CPagination($count);
         $pager->pageSize = 30;
@@ -125,19 +147,13 @@ class ChengyuController extends Q {
             'posts' => $posts,
         ));
     }
-
-    /**
-     * Manages all models.
-     */
-    public function actionAdmin() {
-        $model = new Chengyu('search');
-        $model->unsetAttributes();  // clear any default values
-        if (isset($_GET['Chengyu']))
-            $model->attributes = $_GET['Chengyu'];
-
-        $this->render('admin', array(
-            'model' => $model,
-        ));
+    
+    public function actionSearch(){
+        $keyword=  tools::val('keyword','t',1);
+        $data=array(
+            ''
+        );
+        $this->render('search',$data);
     }
 
     /**

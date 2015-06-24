@@ -1312,9 +1312,6 @@ class zmf {
 
     public static function uid() {
         if (Yii::app()->user->isGuest) {
-            if (zmf::config('officalUid')) {
-                return zmf::config('officalUid');
-            }
             return false;
         } else {
             return Yii::app()->user->id;

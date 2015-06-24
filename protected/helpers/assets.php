@@ -53,26 +53,13 @@ class assets {
         $cs = Yii::app()->clientScript;
         if ($type == 'web') {
             $cs->registerCssFile($staticUrl . 'common/css/bootstrap.min.css');
-            $cs->registerCssFile($staticUrl . 'common/css/font-awesome.min.css');
-            $cs->registerCssFile($staticUrl . 'common/css/font-awesome-ie7.min.css');
+//            $cs->registerCssFile($staticUrl . 'common/css/font-awesome.min.css');
+//            $cs->registerCssFile($staticUrl . 'common/css/font-awesome-ie7.min.css');
             $cs->registerCssFile($staticUrl . 'common/css/newsoul.css');
-            $cs->registerCoreScript('jquery');
-            $cs->registerScriptFile($staticUrl . "common/js/bootstrap.min.js", CClientScript::POS_END);
-            $cs->registerScriptFile($staticUrl . "common/js/card.js", CClientScript::POS_END);
-            $cs->registerScriptFile($staticUrl . "common/js/zmf.js", CClientScript::POS_END);
-        } elseif ($type == 'frozen') {
-            $cs->registerCssFile($staticUrl . 'themes/frozen/css/frozen.1.2.1.css');
-            $cs->registerCssFile($staticUrl . 'themes/frozen/css/demo.css');
-            $cs->registerCssFile($staticUrl . 'common/css/font-awesome.min.css');
-            $cs->registerScriptFile($staticUrl . "common/js/zepto.min.js", CClientScript::POS_HEAD);
-            $cs->registerScriptFile($staticUrl . "themes/frozen/js/frozen-1.0.1.js", CClientScript::POS_END);
-            $cs->registerScriptFile($staticUrl . "themes/frozen/js/zmf.js", CClientScript::POS_END);
-        } elseif ($type == 'admin') {
-            $cs->registerCoreScript('jquery', CClientScript::POS_END);
-            $cs->registerScriptFile(Yii::app()->baseUrl . '/common/uploadify/jquery.uploadify-3.1.min.js', CClientScript::POS_END);
-            $cs->registerScriptFile(Yii::app()->baseUrl . "/common/js/zmf.js", CClientScript::POS_END);
-            $cs->registerScriptFile(Yii::app()->baseUrl . "/common/js/bootstrap.min.js", CClientScript::POS_END);
-            $cs->registerScriptFile(Yii::app()->baseUrl . "/common/js/admin.js", CClientScript::POS_END);
+//            $cs->registerCoreScript('jquery');
+//            $cs->registerScriptFile($staticUrl . "common/js/bootstrap.min.js", CClientScript::POS_END);
+//            $cs->registerScriptFile($staticUrl . "common/js/card.js", CClientScript::POS_END);
+//            $cs->registerScriptFile($staticUrl . "common/js/zmf.js", CClientScript::POS_END);
         }
     }
 

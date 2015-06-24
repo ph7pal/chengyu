@@ -55,7 +55,7 @@ class ChengyuContent extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            
+            'chengyuInfo' => array(self::BELONGS_TO, 'Chengyu', 'cid'),
         );
     }
 
@@ -120,6 +120,16 @@ class ChengyuContent extends CActiveRecord {
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
+    }
+    
+    public static function getNew(){
+        $items= ChengyuContent::model()->findAll(array(
+            'condition'=>"classify='".ChengyuContent::CLASSIFY_GUSHI."' AND `status`=".Posts::STATUS_PASSED,
+            'order'=>'cTime DESC',
+            'limit'=>20,
+            'select'=>'id,cid,content'
+        ));
+        return $items;
     }
 
 }

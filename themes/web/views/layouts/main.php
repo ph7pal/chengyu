@@ -7,21 +7,6 @@
 <div class="header-top">
     <div class="header-logo"><?php echo CHtml::link(zmf::config('sitename'),zmf::config('baseurl'));?></div>          
 </div>
-<!--div class="navbar navbar-default" role="navigation">
-  <div class="container no-padding">     
-      <div class="navbar-collapse collapse no-padding">
-        <ul class="nav navbar-nav">
-            <li><?php echo CHtml::link('首页',zmf::config('baseurl'));?></li>
-            <li><?php echo CHtml::link('成语大全',zmf::config('baseurl'));?></li>
-        </ul>
-        <form class="navbar-form navbar-right" method="GET" action="<?php echo zmf::config("domain").Yii::app()->createUrl("posts/search");?>">
-        <div class="form-group">
-          <input type="text" id="keyword" name="keyword" class="form-control input-sm" placeholder="<?php echo zmf::t('search_placeholder');?>" onchange="searchSuggest('top')">
-        </div>
-      </form>
-    </div>
-  </div> 
-</div-->
 <div class="wrapper">
     <?php if(!empty($this->breadcrumbs)){?>
     <ol class="breadcrumb">
@@ -34,26 +19,33 @@
         <?php echo $content; ?>
     </div>
     <div class="aside-page">
+        <?php $form=$this->beginWidget('CActiveForm', array('id'=>'searcher-form','enableAjaxValidation'=>false,'method'=>'GET','action'=>Yii::app()->createUrl('chengyu/search'))); ?>
         <div class="aside-searchHolder" style="margin-bottom: 15px">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="请输入关键词">
+                <input type="text" id='keyword' name='keyword' class="form-control" placeholder="请输入关键词">
                 <span class="input-group-btn">
-                  <button class="btn btn-primary" type="button">搜索</button>
+                    <button class="btn btn-primary" type="submit">搜索</button>
                 </span>
             </div><!-- /input-group -->
+            <div class="list-group" id="searcher-holder"></div>
         </div>
-        <?php if(!empty($this->menu)){?>
+        <?php $this->endWidget(); ?>
+        <?php if(!empty($this->menu) && $this->uid){?>
         <div class="list-group">
             <?php foreach($this->menu as $k=>$v){?>
             <?php echo CHtml::link($v['label'],$v['url'],array('class'=>'list-group-item'));?>
             <?php }?>
         </div>
         <?php }?>
-        <div class="aside-mod">
+        <!--div class="aside-mod">
             一些推荐
-        </div>        
+        </div-->
         <div class="aside-mod">
-            <p class="text-center"><a href="<?php echo zmf::config('domain');?>" target="_blank"><?php echo zmf::config('sitename');?></a><?php echo zmf::config('version');?> <?php echo zmf::config('copyright');?> <?php echo zmf::config('beian');?>&nbsp;<?php echo CHtml::link('关于本站',array('siteinfo/view','code'=>'about'));?></p>
+            <blockquote>
+                <p><?php echo zmf::config('shortTitle');?></p>
+                <footer><?php echo CHtml::link(zmf::config('sitename'),zmf::config('domain'));?></footer>
+            </blockquote>
+            <p class="help-block"><?php echo zmf::config('copyright');?> <?php echo zmf::config('beian');?></p>
         </div>
     </div>    
 </div>

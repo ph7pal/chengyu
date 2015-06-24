@@ -43,7 +43,7 @@ body {
     border: 1px solid #e1dfdf;
     border-radius: 3px;
     box-shadow: 0 2px 1px -1px #d1d4d7;
-    padding:0 25px
+    padding:0 25px 25px
 }
 .aside-page{
     float:right;
@@ -58,6 +58,38 @@ body {
     box-shadow: 0 2px 1px -1px #d1d4d7;
     margin-bottom: 15px;
 }
+.text-indent{
+    text-indent: 2em
+}
+.zmf-border-bottom{
+    padding-bottom: 15px; 
+    border-bottom:1px dashed #e9e9e9
+}
+/*成语列表字母*/
+.char-bar{
+    margin-top: 15px;
+}
+.char-bar a{
+    margin-right: 5px;
+}
+/*自定义的颜色*/
+.color-grey,.color-grey a{
+    color:#999
+}
+.color-grey a:hover{
+    color: #428bca;
+    text-decoration: underline;
+}
+.aside-searchHolder{
+    margin-bottom: 15px;
+}
+/*首页最新列表*/
+.col-list-item{
+width: 120px;
+float: left;
+line-height: 1.6;
+padding:2px 0;
+}    
 /*form表单错误提示*/
 .errorSummary{
     border:2px solid #C00;
@@ -78,3 +110,7 @@ body {
 span.required,.errorMessage{
     color:red
 }
+/**
+*重写分页样式
+*/
+ul.yiiPager{height:26px;margin:0;padding:0}ul.yiiPager li{display:inline;margin:0 4px 0 0}ul.yiiPager a:link,ul.yiiPager a:visited{padding:5px 9px;border:1px solid #ccc;border-radius:3px;background:#fff;color:#777;font-weight:normal}ul.yiiPager a:hover{border-color:#449d44;box-shadow:1px 1px 1px #333;color:#035d67;text-decoration:none}ul.yiiPager .selected a{padding:6px 10px;border:0;border-radius:3px;background:#449d44;color:#fff}ul.yiiPager .hidden{display:none}

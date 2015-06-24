@@ -65,6 +65,11 @@ return array(
                 ),
             ),
         ),
+        'clientScript' => array(
+            'scriptMap' => array(
+                'pager.css' => false,
+            ),
+        ),
     ),
     'params' => require(dirname(__FILE__) . '/params.php'),
 );

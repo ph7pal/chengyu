@@ -7,15 +7,14 @@ class Q extends T {
 
     public $layout = 'main';
     public $referer;
-    //public $uid;    
-    //public $mySelf;
+    public $uid;    
     public $truename;
     public $userInfo;
     public $pageDescription;
     public $keywords;
-    public $searchKeywords; //搜索词
-    
+    public $searchKeywords; //搜索词    
     public $wholeNotice = ''; //全站通知，导航条顶部
+    public $asideRecommend=array();//边侧推荐
 
     function init() {
         parent::init();
@@ -23,6 +22,7 @@ class Q extends T {
             header("Content-type: text/html; charset=utf-8");
             exit(zmf::config('closeSiteReason'));
         }
+        $this->uid=  zmf::uid();
         if (!Yii::app()->user->isGuest) {
             $uid = Yii::app()->user->id;
             $userInfo = Users::getUserInfo($uid);

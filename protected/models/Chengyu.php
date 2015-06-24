@@ -67,10 +67,10 @@ class Chengyu extends CActiveRecord {
         return array(
             'fanYiCis' => array(self::HAS_MANY, 'ChengyuCi', 'cid', 'condition' => 'classify="'.ChengyuCi::CLASSIFY_FANYICI.'"', 'order' => 'id ASC'),//反义词
             'tongYiCis' => array(self::HAS_MANY, 'ChengyuCi', 'cid', 'condition' => 'classify="'.ChengyuCi::CLASSIFY_TONGYICI.'"', 'order' => 'id ASC'),//同义词
-            'jieShis' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_JIESHI.'"', 'order' => 'id ASC'),//解释
-            'chuChus' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_CHUCHU.'"', 'order' => 'id ASC'),//出处
-            'liJus' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_LIJU.'"', 'order' => 'id ASC'),//例句
-            'guShis' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_GUSHI.'"', 'order' => 'id ASC'),//故事
+            'jieShis' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_JIESHI.'" AND `status`='.Posts::STATUS_PASSED, 'order' => 'id ASC'),//解释
+            'chuChus' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_CHUCHU.'" AND `status`='.Posts::STATUS_PASSED, 'order' => 'id ASC'),//出处
+            'liJus' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_LIJU.'" AND `status`='.Posts::STATUS_PASSED, 'order' => 'id ASC'),//例句
+            'guShis' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_GUSHI.'" AND `status`='.Posts::STATUS_PASSED, 'order' => 'id ASC'),//故事
         );
     }
 
@@ -138,10 +138,10 @@ class Chengyu extends CActiveRecord {
         return parent::model($className);
     }
     
-    public static function getNew(){
+    public static function getNew($limit=50){
         $items=  Chengyu::model()->findAll(array(
             'order'=>'cTime DESC',
-            'limit'=>50,
+            'limit'=>$limit,
             'select'=>'id,hash,title'
         ));
         return $items;
