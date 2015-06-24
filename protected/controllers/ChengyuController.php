@@ -7,8 +7,12 @@ class ChengyuController extends Q {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $id= zmf::filterInput($id);
+        $info=$this->loadModel($id);
+        $this->pageTitle=$info['title'].' - '.zmf::config('sitename');
+        $this->pageDescription=$info['title'].'的解释、'.$info['title'].'英文翻译、';
         $this->render('view', array(
-            'model' => $this->loadModel($id),
+            'model' => $info,
         ));
     }
 
@@ -108,9 +112,17 @@ class ChengyuController extends Q {
      * Lists all models.
      */
     public function actionIndex() {
-        $dataProvider = new CActiveDataProvider('Chengyu');
+        $criteria = new CDbCriteria();
+        $criteria->order = 'cTime DESC';
+        $count = Chengyu::model()->count($criteria);
+        $pager = new CPagination($count);
+        $pager->pageSize = 30;
+        $pager->applyLimit($criteria);
+        $posts = Chengyu::model()->findAll($criteria);
+
         $this->render('index', array(
-            'dataProvider' => $dataProvider,
+            'pages' => $pager,
+            'posts' => $posts,
         ));
     }
 

@@ -44,3 +44,5 @@ CREATE TABLE `pre_chengyu_content` (
 KEY `cid`(`cid`),
 KEY `classify`(`classify`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+alter table pre_chengyu add fayin varchar(255) not null;

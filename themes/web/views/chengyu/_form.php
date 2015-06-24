@@ -16,6 +16,11 @@
 		<?php echo $form->error($model,'title'); ?>
 	</div>
 	<div class="form-group">
+		<?php echo $form->labelEx($model,'fayin'); ?>
+		<?php echo $form->textField($model,'fayin',array('size'=>60,'maxlength'=>255,'class'=>'form-control')); ?>
+		<?php echo $form->error($model,'fayin'); ?>
+	</div>
+	<div class="form-group">
 		<?php echo $form->labelEx($model,'yufa'); ?>
 		<?php echo $form->textField($model,'yufa',array('size'=>60,'maxlength'=>255,'class'=>'form-control')); ?>
 		<?php echo $form->error($model,'yufa'); ?>

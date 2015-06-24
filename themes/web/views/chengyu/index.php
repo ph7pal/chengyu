@@ -3,18 +3,21 @@
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-	'Chengyus',
+    CHtml::link('首页',zmf::config('baseurl')),
+	'词语大全',
 );
 
 $this->menu=array(
-	array('label'=>'Create Chengyu', 'url'=>array('create')),
-	array('label'=>'Manage Chengyu', 'url'=>array('admin')),
+	array('label'=>'新增', 'url'=>array('create')),
 );
 ?>
-
-<h1>Chengyus</h1>
-
-<?php $this->widget('zii.widgets.CListView', array(
-	'dataProvider'=>$dataProvider,
-	'itemView'=>'_view',
-)); ?>
+<div class="">
+    <?php $charStr='ABCDEFGHIJKLMNOPQRSTUVWXYZ';$charArr=str_split($charStr);foreach($charArr as $char){?>
+    <?php echo CHtml::link($char,array('chengyu/index','char'=>$char));?>
+    <?php }?>
+</div>
+<table class="table table-hover">
+<?php foreach($posts as $post){?>
+<?php $this->renderPartial('/chengyu/_view',array('data'=>$post));?>
+<?php } ?>
+</table>

@@ -36,7 +36,7 @@ class Chengyu extends CActiveRecord {
         return array(
             array('title', 'required'),            
             array('title', 'unique'),            
-            array('title, title_tw, pinyin, yufa', 'length', 'max' => 255),
+            array('title, title_tw, pinyin, yufa,fayin', 'length', 'max' => 255),
             array('hash', 'length', 'max' => 32),
             array('firstChar', 'length', 'max' => 1),
             array('cTime', 'default', 'setOnEmpty' => true, 'value' => zmf::now()),
@@ -82,8 +82,9 @@ class Chengyu extends CActiveRecord {
             'id' => 'ID',
             'title' => '成语',
             'hash' => '名称MD5',
-            'title_tw' => 'Title Tw',
+            'title_tw' => '繁体',
             'pinyin' => '拼音',
+            'fayin' => '发音',
             'firstChar' => '拼音首字母',
             'yufa' => '语法',
             'hits' => '访问次数',
@@ -135,6 +136,15 @@ class Chengyu extends CActiveRecord {
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
+    }
+    
+    public static function getNew(){
+        $items=  Chengyu::model()->findAll(array(
+            'order'=>'cTime DESC',
+            'limit'=>50,
+            'select'=>'id,hash,title'
+        ));
+        return $items;
     }
 
 }

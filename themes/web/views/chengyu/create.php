@@ -3,13 +3,13 @@
 /* @var $model Chengyu */
 
 $this->breadcrumbs=array(
-	'Chengyus'=>array('index'),
-	'Create',
+    CHtml::link('首页', zmf::config('baseurl')),
+	'成语大全'=>array('index'),
+	'新增',
 );
 
 $this->menu=array(
-	array('label'=>'List Chengyu', 'url'=>array('index')),
-	array('label'=>'Manage Chengyu', 'url'=>array('admin')),
+	array('label'=>'列表', 'url'=>array('index')),
 );
 ?>
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

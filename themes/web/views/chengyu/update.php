@@ -1,21 +1,16 @@
 <?php
 /* @var $this ChengyuController */
 /* @var $model Chengyu */
-
-$this->breadcrumbs=array(
-	'Chengyus'=>array('index'),
-	$model->title=>array('view','id'=>$model->id),
-	'Update',
+$this->breadcrumbs = array(
+    CHtml::link('首页', zmf::config('baseurl')),
+    '成语大全' => array('index'),
+    $model->title => array('view', 'id' => $model->id),
+    '更新',
 );
-
-$this->menu=array(
-	array('label'=>'List Chengyu', 'url'=>array('index')),
-	array('label'=>'Create Chengyu', 'url'=>array('create')),
-	array('label'=>'View Chengyu', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage Chengyu', 'url'=>array('admin')),
+$this->menu = array(
+    array('label' => '列表', 'url' => array('index')),
+    array('label' => '新增', 'url' => array('create')),
+    array('label' => '详细信息', 'url' => array('view', 'id' => $model->id)),
 );
 ?>
-
-<h1>Update Chengyu <?php echo $model->id; ?></h1>
-
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>
