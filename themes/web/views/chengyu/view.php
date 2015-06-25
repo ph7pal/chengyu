@@ -19,11 +19,11 @@ $this->menu = array(
 $tongyis=$model->tongYiCis;
 $fanyiis=$model->fanYiCis;
 ?>
-<h1><?php echo $model->title;?></h1>
+<h1 class="item-title"><?php echo $model->title;?></h1>
 <table class="table table-striped">
-    <tr><td style="width: 80px">发音：</td><td><?php echo $model->fayin;?></td></tr>
-    <tr><td>繁体：</td><td><?php echo $model->title_tw;?></td></tr>
-    <tr><td>语法：</td><td><?php echo $model->yufa;?></td></tr>
+    <?php if($model->fayin!=''){?><tr><td>发音：</td><td><?php echo $model->fayin;?></td></tr><?php }?>
+    <?php if($model->title_tw!=''){?><tr><td style="width: 80px">繁体：</td><td><?php echo $model->title_tw;?></td></tr><?php }?>
+    <?php if($model->yufa!=''){?><tr><td>语法：</td><td><?php echo $model->yufa;?></td></tr><?php }?>
     <?php $jies=$model->jieShis;$_total=count($jies);if(!empty($jies)){foreach($jies as $k=>$jieshi){?>  
     <tr><td><?php echo $k==0 ? '解释：' : '&nbsp;';?></td><td><?php echo ($_total >1 ? (($k+1).'、'):'').$jieshi['content'];?></td></tr>
     <?php }}?>
@@ -33,8 +33,8 @@ $fanyiis=$model->fanYiCis;
     <?php $liJus=$model->liJus;$_total=count($liJus);if(!empty($liJus)){foreach($liJus as $k=>$liJu){?>  
     <tr><td><?php echo $k==0 ? '例句：' : '&nbsp;';?></td><td><?php echo ($_total >1 ? (($k+1).'、'):'').$liJu['content'];?></td></tr>
     <?php }}?>
-    <tr><td>同义词：</td><td><?php foreach($tongyis as $tongyi){$_ciInfo=$tongyi->chengyuInfo;echo CHtml::link($_ciInfo['title'],array('chengyu/view','id'=>$_ciInfo['id'])).'&nbsp;';}?></td></tr>
-    <tr><td>反义词：</td><td><?php foreach($fanyiis as $fanyii){$_ciInfo=$fanyii->chengyuInfo;echo CHtml::link($_ciInfo['title'],array('chengyu/view','id'=>$_ciInfo['id'])).'&nbsp;';}?></td></tr>
+    <?php if(!empty($tongyis)){?><tr><td>同义词：</td><td><?php foreach($tongyis as $tongyi){$_ciInfo=$tongyi->chengyuInfo;echo CHtml::link($_ciInfo['title'],array('chengyu/view','id'=>$_ciInfo['id'])).'&nbsp;';}?></td></tr><?php }?>
+    <?php if(!empty($fanyiis)){?><tr><td>反义词：</td><td><?php foreach($fanyiis as $fanyii){$_ciInfo=$fanyii->chengyuInfo;echo CHtml::link($_ciInfo['title'],array('chengyu/view','id'=>$_ciInfo['id'])).'&nbsp;';}?></td></tr><?php }?>
 </table>
 <?php if(!empty($model->guShis)){$guShis=$model->guShis;?>
 <h4>故事</h4>

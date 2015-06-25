@@ -11,7 +11,7 @@ class ChengyuController extends Q {
         $info = $this->loadModel($id);
         Posts::updateCount($id, 'Chengyu');
         $this->pageTitle = $info['title'] . ' - ' . zmf::config('sitename');
-        $this->pageDescription = $info['title'] . '的解释、' . $info['title'] . '英文翻译、';
+        $this->pageDescription = $info['title'] . '的解释、' . $info['title'] . '英文翻译、'. $info['title'] . '的故事、'. $info['title'] . '的成语新解';
         $this->render('view', array(
             'model' => $info,
         ));
@@ -112,13 +112,13 @@ class ChengyuController extends Q {
     }
 
     public function actionDelcontent($id) {
-        $id=zmf::filterInput($id);
+        $id = zmf::filterInput($id);
         $model = ChengyuContent::model()->findByPk($id);
         if ($model === null) {
             throw new CHttpException(404, 'The requested page does not exist.');
         }
-        $model->updateByPk($id, array('status'=>  Posts::STATUS_DELED));
-        $this->redirect(array('chengyu/view','id'=>$model->cid));
+        $model->updateByPk($id, array('status' => Posts::STATUS_DELED));
+        $this->redirect(array('chengyu/view', 'id' => $model->cid));
     }
 
     public function actionDelete($id) {
@@ -132,8 +132,8 @@ class ChengyuController extends Q {
     public function actionIndex() {
         $criteria = new CDbCriteria();
         $criteria->order = 'cTime DESC';
-        $char=  tools::val('char','t',1);
-        if($char){
+        $char = tools::val('char', 't', 1);
+        if ($char) {
             $criteria->addCondition("firstChar='{$char}'");
         }
         $count = Chengyu::model()->count($criteria);
@@ -147,13 +147,37 @@ class ChengyuController extends Q {
             'posts' => $posts,
         ));
     }
-    
-    public function actionSearch(){
-        $keyword=  tools::val('keyword','t',1);
-        $data=array(
-            ''
+
+    public function actionSearch() {
+        $keyword = tools::val('keyword', 't', 1);
+        $this->searchKeywords = $keyword;
+        //去掉标点
+        $keyword = zmf::formatTitle($keyword);
+        $posts = $conditionArr = array();
+        if ($keyword != '') {
+            //只取8个字符
+            $keyword = zmf::subStr($keyword, 8, 0, '');
+            //转换为简体
+            $keyword = zmf::twTozh($keyword);            
+            $karr = zmf::chararray($keyword);
+            $karr = $karr[0];
+            foreach ($karr as $char) {
+                $conditionArr[] = " (title LIKE '%{$char}%') ";
+            }
+            $conStr = join('OR', $conditionArr);
+            $sql = "SELECT id,`hash`,title FROM {{chengyu}} WHERE ({$conStr}) AND `status`=" . Posts::STATUS_PASSED . " LIMIT 30";
+            $posts = Yii::app()->db->createCommand($sql)->queryAll();
+        }
+        $data = array(
+            'posts'=>$posts
         );
-        $this->render('search',$data);
+        if ($keyword != '') {
+            $this->pageTitle="【{$this->searchKeywords}】解释_【{$this->searchKeywords}】英文翻译_【{$this->searchKeywords}】的故事 - ".zmf::config('sitename');
+            $this->pageDescription="搜索{$this->searchKeywords}解释，搜索{$this->searchKeywords}英文翻译，搜索{$this->searchKeywords}的故事，搜索{$this->searchKeywords}的成语新解";
+        }else{
+            $this->pageTitle='成语解释_成语英文翻译_成语故事 - '.zmf::config('sitename');
+        }
+        $this->render('search', $data);
     }
 
     /**

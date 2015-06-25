@@ -25,34 +25,6 @@ class zmf {
         }
     }
 
-    public static function userConfig($uid, $type = '') {
-        $dataProvider = UserSetting::model()->findAllByAttributes(array('uid' => $uid));
-        $settings = CHtml::listData($dataProvider, 'stype', 'svalue');
-        if (!empty($type)) {
-            if (!isset($settings[$type]) OR empty($settings[$type])) {
-                return 1;
-            } else {
-                if ($settings[$type] == '0') {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-        } else {
-            return $settings;
-        }
-    }
-
-    public static function userExtraInfo($uid, $type = '') {
-        $dataProvider = UserInfo::model()->findAllByAttributes(array('uid' => $uid));
-        $settings = CHtml::listData($dataProvider, 'name', 'value');
-        if (!empty($type)) {
-            return $settings[$type];
-        } else {
-            return $settings;
-        }
-    }
-
     public static function getBadwords() {
         $words = self::config('badwords');
         if (!$words) {
@@ -449,26 +421,6 @@ class zmf {
         return $url;
     }
 
-    public static function floatNavUrl($title, $areaid, $htmlOptions = array()) {
-        $c = Yii::app()->getController()->id;
-        $a = Yii::app()->getController()->getAction()->id;
-        if (in_array($c, array('posts'))) {
-            return CHtml::link($title, $areaid ? array('posts/story', 'areaid' => $areaid) : 'javascript:;', $htmlOptions);
-        } elseif (in_array($c, array('question'))) {
-            return CHtml::link($title, $areaid ? array('question/index', 'areaid' => $areaid) : 'javascript:;', $htmlOptions);
-        } elseif (in_array($c, array('position', 'poipost'))) {
-            return CHtml::link($title, $areaid ? array('position/index', 'areaid' => $areaid) : 'javascript:;', $htmlOptions);
-        } elseif (in_array($c, array('travel'))) {
-            return CHtml::link($title, $areaid ? array('travel/index', 'areaid' => $areaid) : 'javascript:;', $htmlOptions);
-        } elseif (in_array($c, array('yueban'))) {
-            return CHtml::link($title, $areaid ? array('yueban/index', 'areaid' => $areaid, 'year' => tools::val('year'), 'month' => tools::val('month'), 'day' => tools::val('day')) : 'javascript:;', $htmlOptions);
-        } elseif (in_array($c, array('goods'))) {
-            return CHtml::link($title, $areaid ? array('goods/index', 'areaid' => $areaid) : 'javascript:;', $htmlOptions);    
-        } else {
-            return CHtml::link($title, $areaid ? array('index/show', 'areaid' => $areaid) : 'javascript:;', $htmlOptions);
-        }
-    }
-
     public static function imgurl($logid, $filepath, $imgtype, $type = 'scenic') {
         return self::config('baseurl') . 'attachments/' . $type . '/' . $imgtype . '/' . $logid . '/' . $filepath;
     }
@@ -512,47 +464,6 @@ class zmf {
             } else {
                 return CHtml::link("<img src='{$_img}' />", array('users/index', 'id' => $uid));
             }
-        }
-    }
-
-    public static function urlPlace($urlPlace, $newPlace) {
-        if (empty($newPlace)) {
-            return $urlPlace;
-        } else {
-            return $newPlace;
-        }
-    }
-
-    public static function urlReturnPlaceType($plate, $country, $city) {
-        if (!empty($plate)) {
-            $info = array('type' => 'plate', 'value' => $plate);
-        } elseif (!empty($country)) {
-            $info = array('type' => 'country', 'value' => $country);
-        } elseif (!empty($city)) {
-            $info = array('type' => 'city', 'value' => $city);
-        }
-        return $info;
-    }
-
-    public static function urlTag($urlstag, $newtag) {
-        if (!empty($urlstag)) {
-            $tagarr = array_unique(array_filter(explode(",", $urlstag)));
-            if (isset($newtag) AND ! empty($newtag) AND ! in_array($newtag, $tagarr)) {
-                return $urlstag . ',' . $newtag;
-            } else {
-                return $urlstag;
-            }
-        } else {
-            return $newtag;
-        }
-    }
-
-    public static function checkTag($urlstag, $newtag) {
-        $tagarr = array_unique(array_filter(explode(",", $urlstag)));
-        if (in_array($newtag, $tagarr)) {
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -615,36 +526,6 @@ class zmf {
         $key = zmf::jiaMi($key);
         $cookie = Yii::app()->request->getCookies();
         unset($cookie[$key]);
-    }
-
-    public static function getCountryByIp() {
-        $info = self::getCookie('user_ip_info');
-        if (!$info) {
-            $apiurl = 'http://ip.taobao.com/service/getIpInfo.php?ip=' . Yii::app()->request->userHostAddress;
-            //$apiurl = 'http://ip.taobao.com/service/getIpInfo.php?ip=14.107.177.251';
-            $info = @file_get_contents($apiurl);
-            $arr = CJSON::decode($info, TRUE);
-            if ($arr['code'] == '0') {
-                self::setCookie('user_ip_info', $info, 86400);
-            }
-        }
-        $arr = CJSON::decode($info, TRUE);
-        return $arr['data']['country_id'];
-    }
-
-    public static function getLatlngByIp() {
-        //$info = self::getCookie('user_latlng_info');
-        if (!$info) {
-            //$apiurl = 'http://api.map.baidu.com/location/ip?ak=lXMg4eWPEGg1uQkHu3Mx546c&ip=' . Yii::app()->request->userHostAddress;
-            $apiurl = 'http://api.map.baidu.com/location/ip?ak=lXMg4eWPEGg1uQkHu3Mx546c&ip=59.125.205.87&coor=bd09ll';
-            $info = @file_get_contents($apiurl);
-            $arr = CJSON::decode($info, TRUE);
-            if ($arr['status'] == 0) {
-                self::setCookie('user_latlng_info', $info, 86400);
-            }
-        }
-        $arr = CJSON::decode($info, TRUE);
-        return $arr;
     }
 
     public static function request_by_curl($remote_server, $post_string) {
@@ -803,86 +684,6 @@ class zmf {
         return CHtml::link('<span class="icon-link"></span> 网页链接', $_url, array('target' => '_blank'));
     }
 
-    public static function waterPosition($info, $size, $po) {
-        $w = intval(str_replace(",", "", $info[0]));
-        $h = intval(str_replace(",", "", $info[1]));
-        $w_info = getimagesize(Yii::app()->basePath . '/../common/images/water/water.png');
-        $w1 = intval(str_replace(",", "", $w_info[0])); //water width
-        $h1 = intval(str_replace(",", "", $w_info[1])); //water height
-        $max = 0; //原图最大边
-        if ($w > $h) {
-            $max = $w;
-        } else {
-            $max = $h;
-        }
-        if ($max < self::config("minImgWaterSize")) {
-            $re['water'] = false;
-            return $re;
-        }
-        $max_w = 0; //水印最大边
-        if ($h1 > $w1) {
-            $max_w = $h1;
-        } else {
-            $max_w = $w1;
-        }
-        if ($size == 'origin') {
-            $rate = 1;
-        } else {
-            $rate = $size / $max;
-        }
-
-        $w2 = number_format($w * $rate, 2, '.', '');
-        $h2 = number_format($h * $rate, 2, '.', '');
-        if ($w1 >= $w2 OR $h1 >= $h2) {
-            $re = array(
-                'x' => $w2,
-                'y' => $h2
-            );
-            $re['water'] = false;
-            return $re;
-            exit;
-        }
-
-        //1=左上
-        //2=右上
-        //3=右下
-        //4=坐下
-        //5=中间
-        $w3 = $w2 - $w1;
-        $h3 = $h2 - $h1;
-        if (!in_array($po, array(1, 2, 3, 4, 5))) {
-            $po = 5;
-        }
-        if ($po == 1) {
-            $re = array(
-                'x' => 0,
-                'y' => 0
-            );
-        } elseif ($po == 2) {
-            $re = array(
-                'x' => $w3,
-                'y' => 0
-            );
-        } elseif ($po == 3) {
-            $re = array(
-                'x' => $w3,
-                'y' => $h3
-            );
-        } elseif ($po == 4) {
-            $re = array(
-                'x' => 0,
-                'y' => $h3
-            );
-        } elseif ($po == 5) {
-            $re = array(
-                'x' => number_format($w3 / 2),
-                'y' => number_format($h3 / 2)
-            );
-        }
-        $re['water'] = true;
-        return $re;
-    }
-
     public static function filterInput($str, $type = 'n', $textonly = false) {
         if ($textonly) {
             $str = strip_tags(trim($str));
@@ -903,37 +704,6 @@ class zmf {
         }
         $str = self::handleContent($str);
         return $str;
-    }
-
-    public static function colPositions($return = '') {
-        $positions = array(
-            'topbar' => '导航条',
-            'main' => '主页面',
-            'footer' => '页脚',
-            'regpage' => '注册页面',
-            'logpage' => '登录页面',
-            'gongyi' => '公益首页',
-        );
-        if ($return != '') {
-            return $positions[$return];
-        } else {
-            return $positions;
-        }
-    }
-
-    public static function colClassify($return = '') {
-        $cls = array(
-            'lists' => '标题列表',
-            'thumb' => '缩略图式',
-            'simpleInfo' => '标题及简介',
-            'fulltext' => '全文展示',
-            'page' => '单页展示'
-        );
-        if ($return != '') {
-            return $cls[$return];
-        } else {
-            return $cls;
-        }
     }
 
     /**
@@ -1036,7 +806,7 @@ class zmf {
         $str = $zhtw->tw_zh($str);
         return $str;
     }
-    
+
     /**
      * 简体转繁体
      * @param type $str
@@ -1050,20 +820,6 @@ class zmf {
         require_once 'zhtw.php';
         $zhtw = new zhtw();
         $str = $zhtw->zh_tw($str);
-        return $str;
-    }
-
-    public static function seoReplace($str) {
-        if (!$str) {
-            return '';
-        }
-        $words = include Yii::app()->basePath . '/data/seowords.php';
-        if (empty($words)) {
-            return $str;
-        }
-        foreach ($words as $key => $val) {
-            $str = str_replace($key, $val, $str);
-        }
         return $str;
     }
 
@@ -1126,110 +882,6 @@ class zmf {
         }
     }
 
-    public static function miniTopBar() {
-        $c = Yii::app()->getController()->id;
-        $a = Yii::app()->getController()->getAction()->id;
-        $t = $_GET['table'];
-        $type = $_GET['type'];
-        $uid = $_GET['uid'];
-        $longstr = '';
-        if ((in_array($a, array('index', 'view', 'create', 'update', 'admin'))) && !in_array($c, array('tools', 'config'))) {
-            $arr = array(
-                'column' => '栏目',
-                'area' => '地区',
-                'position' => '景点',
-                'poipost' => '景点点评',
-                'poitips' => '景点心得',
-                'plans' => '旅行计划',
-                'plans' => '旅行计划',
-                'question' => '问题',
-                'answer' => '回答',
-                'posts' => '文章',
-                'comments' => '评论',
-                'tags' => '标签',
-                'attachments' => '附件',
-                'album' => '相册',
-                'ads' => '展示',
-                'link' => '友链',
-                'users' => '用户',
-                //'user_group' => '用户组',
-                'useraction' => '记录'
-            );
-            foreach ($arr as $k => $v) {
-                if ($c == $k) {
-                    $css = 'current';
-                } else {
-                    $css = '';
-                }
-                $longstr.='<li><a class="list_btn ' . $css . '" href="' . Yii::app()->createUrl('admin/' . $k . '/index') . '">' . $v . '</a></li>';
-            }
-        } elseif ($c == 'config') {
-            $arr = array(
-                'baseinfo' => '基本设置',
-                'siteinfo' => '站点信息',
-                'upload' => '上传设置',
-                'page' => '分页设置',
-                'base' => '运维设置',
-                'email' => '邮件设置',
-            );
-            foreach ($arr as $k => $v) {
-                if ($type == $k) {
-                    $css = 'current';
-                } else {
-                    $css = '';
-                }
-                $longstr.='<li><a class="list_btn ' . $css . '" href="' . Yii::app()->createUrl('admin/config/index', array('type' => $k)) . '">' . $v . '</a></li>';
-            }
-        } elseif ($c == 'tools') {
-            $arr = array(
-                'clearcache' => '清除缓存',
-                'db' => '数据库',
-            );
-            foreach ($arr as $k => $v) {
-                if ($type == $k) {
-                    $css = 'current';
-                } else {
-                    $css = '';
-                }
-                $longstr.='<li><a class="list_btn ' . $css . '" href="' . Yii::app()->createUrl('admin/tools/index', array('type' => $k)) . '">' . $v . '</a></li>';
-            }
-        }
-        echo $longstr;
-    }
-
-    public static function adminBar() {
-        $c = Yii::app()->getController()->id;
-        $a = Yii::app()->getController()->getAction()->id;
-        $t = $_GET['table'];
-        $type = $_GET['type'];
-        $arr['首页'] = array(
-            'url' => CHtml::link('首页', array('index/index')),
-            'power' => '',
-            'css' => ($c == 'index') ? 'active' : ''
-        );
-        $arr['最新'] = array(
-            'url' => CHtml::link('最新', array('comments/index')),
-            'power' => '',
-            'css' => ($a == 'index' && !in_array($c, array('tools', 'index', 'config'))) ? 'active' : ''
-        );
-        $arr['工具'] = array(
-            'url' => CHtml::link('工具', array('tools/index', 'type' => 'clearcache')),
-            'power' => '',
-            'css' => (in_array($c, array('tools'))) ? 'active' : ''
-        );
-        $arr['设置'] = array(
-            'url' => CHtml::link('设置', array('config/index')),
-            'power' => '',
-            'css' => (in_array($c, array('config'))) ? 'active' : '',
-        );
-        $longstr = '<ul class="nav nav-pills nav-stacked">';
-        foreach ($arr as $k => $v) {
-            $longstr.='<li role="presentation" class="' . $v['css'] . '">' . $v['url'] . '</li>';
-        }
-        $longstr.='</ul>';
-        echo $longstr;
-    }
-
     /**
      * 根据时区获取当前时间
      * @param type $timestamp
@@ -1264,70 +916,12 @@ class zmf {
         return date($format, $time);
     }
 
-    /**
-     * 处理生成评价
-     */
-    public static function starCss($star, $font = 14) {
-        if ($star > 5) {
-            $star = 5;
-        }
-        if ($star < 0) {
-            $star = 0;
-        }
-        if (!$star) {
-            return '';
-        }
-        $_floor = floor($star);
-        if (!$_floor) {
-            return '';
-        }
-        $_half = false;
-        if ($star == $_floor) {
-            $_len = $_int = $star;
-        } elseif ($star > $_floor && $star <= ($_floor + 0.7)) {
-            $_int = $_floor;
-            $_len = $_floor + 0.5;
-            $_half = true;
-        } else {
-            $_len = $_int = ceil($star);
-        }
-        $str = '<span style="color:#5cb85c;" class="poi-score">';
-        /*
-          for ($i = 1; $i <= $_int; $i++) {
-          $str.='<div style="width:' . $font . 'px;overflow: hidden" class="pull-left"><span class="glyphicon glyphicon-star"></span></div>';
-          }
-          if ($_half){
-          $str.='<div style="width:' . ($font / 2) . 'px;overflow: hidden"><span class="glyphicon glyphicon-star"></span></div>';
-          }
-         */
-        for ($i = 1; $i <= $_int; $i++) {
-            $str.='<span class="icon-star"></span>';
-        }
-        if ($_half) {
-            $str.='<span class="icon-star-half"></span>';
-        }
-        $str.='<span style="margin-left:5px;">' . number_format($star, 1, '.', '') . '</span></span>';
-        echo $str;
-    }
-
     public static function uid() {
         if (Yii::app()->user->isGuest) {
             return false;
         } else {
             return Yii::app()->user->id;
         }
-    }
-
-    public static function login() {
-        if (Yii::app()->user->isGuest) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public static function checkReputation() {
-        return self::uid();
     }
 
     /**
@@ -1343,6 +937,48 @@ class zmf {
             zmf::setCookie($cacheKey, $info + 1, 60);
             return false;
         }
+    }
+    /**
+     * 去掉标点
+     */
+    public function formatTitle($title) {
+        $replace = array(
+            '?',
+            '!',
+            '[',
+            ']',
+            '(',
+            ')',
+            ',',
+            ':',
+            ';',
+            '？',
+            '！',
+            '【',
+            '】',
+            '（',
+            '）',
+            '，',
+            '：',
+            '；',
+        );
+        $title = str_replace($replace, '', $title);
+        return $title;
+    }
+    
+    /**
+     * 返回一个字符的数组
+     * @param type $str 字符串
+     * @param type $charset 编码
+     * @return type
+     */
+    public static function chararray($str, $charset = "utf-8") {
+        $re['utf-8'] = "/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|[\xe0-\xef][\x80-\xbf]{2}|[\xf0-\xff][\x80-\xbf]{3}/";
+        $re['gb2312'] = "/[\x01-\x7f]|[\xb0-\xf7][\xa0-\xfe]/";
+        $re['gbk'] = "/[\x01-\x7f]|[\x81-\xfe][\x40-\xfe]/";
+        $re['big5'] = "/[\x01-\x7f]|[\x81-\xfe]([\x40-\x7e]|\xa1-\xfe])/";
+        preg_match_all($re[$charset], $str, $match);
+        return $match;
     }
 
 }

@@ -22,7 +22,7 @@
         <?php $form=$this->beginWidget('CActiveForm', array('id'=>'searcher-form','enableAjaxValidation'=>false,'method'=>'GET','action'=>Yii::app()->createUrl('chengyu/search'))); ?>
         <div class="aside-searchHolder" style="margin-bottom: 15px">
             <div class="input-group">
-                <input type="text" id='keyword' name='keyword' class="form-control" placeholder="请输入关键词">
+                <input type="text" id='keyword' name='keyword' class="form-control" placeholder="请输入关键词" value="<?php echo $this->searchKeywords;?>">
                 <span class="input-group-btn">
                     <button class="btn btn-primary" type="submit">搜索</button>
                 </span>

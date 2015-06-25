@@ -29,6 +29,7 @@ class Q extends T {
             $this->truename = $userInfo['truename'];
             $this->userInfo = $userInfo;            
         }
+        $this->pageTitle=zmf::config('sitename').' - '.zmf::config('shortTitle');
         self::_referer();
     }
 
@@ -38,9 +39,6 @@ class Q extends T {
             '/site/',
             '/error/',
             '/attachments/',
-            '/weibo/',
-            '/qq/',
-            '/weixin/',
         );
         $set = true;
         if (Posts::checkImg($currentUrl)) {

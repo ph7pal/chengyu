@@ -1,5 +1,4 @@
 <?php
-
 $rewrite = require('rewrite.php');
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
@@ -51,7 +50,7 @@ return array(
         'errorHandler' => array(
             'errorAction' => 'error/index',
         ),
-//        'urlManager' => $rewrite,
+        'urlManager' => $rewrite,
         'filecache' => array(
             'class' => 'system.caching.CFileCache',
             'directoryLevel' => '2', //缓存文件的目录深度  
