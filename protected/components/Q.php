@@ -29,7 +29,7 @@ class Q extends T {
             $this->truename = $userInfo['truename'];
             $this->userInfo = $userInfo;            
         }
-        $this->pageTitle=zmf::config('sitename').' - '.zmf::config('shortTitle');
+        $this->pageTitle=zmf::config('sitename');
         self::_referer();
     }
 
