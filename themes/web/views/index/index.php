@@ -8,7 +8,7 @@ $this->breadcrumbs = array(
 <h4>最新收录</h4>
 <div class="zmf-border-bottom clearfix">
     <?php foreach($new as $_new){?>
-    <?php echo CHtml::link($_new['title'],array('chengyu/view','id'=>$_new['id']),array('class'=>'col-list-item'));?> 
+    <?php echo CHtml::link(zmf::subStr($_new['title'],15),array('chengyu/view','id'=>$_new['id']),array('class'=>'col-list-item','title'=>$_new['title']));?> 
     <?php }?>
     <?php echo CHtml::link('查看更多>>',array('chengyu/index'),array('class'=>'col-list-item color-grey'));?>
 </div>

@@ -48,7 +48,7 @@ class ChengyuController extends Q {
             foreach ($karr as $char) {
                 $conditionArr[] = " (title LIKE '%{$char}%') ";
             }
-            $conStr = join('OR', $conditionArr);
+            $conStr = join('AND', $conditionArr);
             $sql = "SELECT id,`hash`,title FROM {{chengyu}} WHERE ({$conStr}) AND `status`=" . Posts::STATUS_PASSED . " LIMIT 30";
             $posts = Yii::app()->db->createCommand($sql)->queryAll();
         }
