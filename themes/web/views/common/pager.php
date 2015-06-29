@@ -9,7 +9,7 @@
              'prevPageLabel' => zmf::t('prevPage'),    
              'nextPageLabel' => zmf::t('nextPage'),    
              'pages' => $pages,    
-             'maxButtonCount'=>10  
+             'maxButtonCount'=>4 
          )         
          );
  ?>

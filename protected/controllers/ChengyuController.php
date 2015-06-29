@@ -14,7 +14,6 @@ class ChengyuController extends Q {
         $pager->pageSize = 30;
         $pager->applyLimit($criteria);
         $posts = Chengyu::model()->findAll($criteria);
-
         $this->render('index', array(
             'pages' => $pager,
             'posts' => $posts,
@@ -25,10 +24,15 @@ class ChengyuController extends Q {
         $id = zmf::filterInput($id);
         $info = $this->loadModel($id);
         Posts::updateCount($id, 'Chengyu');
+        $relatedWords=  Chengyu::getRelatedWords($info['title'], $id);
+        $wordArr=zmf::chararray($info['title']);
+        $wordArr=$wordArr[0];
         $this->pageTitle = $info['title'] . ' - ' . zmf::config('sitename');
         $this->pageDescription = $info['title'] . '的解释、' . $info['title'] . '英文翻译、' . $info['title'] . '的故事、' . $info['title'] . '的成语新解';
         $this->render('view', array(
             'model' => $info,
+            'wordArr' => $wordArr,
+            'relatedWords' => $relatedWords,
         ));
     }    
 

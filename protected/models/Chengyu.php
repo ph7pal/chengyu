@@ -16,7 +16,7 @@
  * @property integer $status
  */
 class Chengyu extends CActiveRecord {
-    
+
     public $fanyici;
     public $tongyici;
 
@@ -34,11 +34,11 @@ class Chengyu extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('title', 'required'),            
+            array('title', 'required'),
             array('hash,title', 'unique'),
             array('title, title_tw, pinyin, yufa,fayin', 'length', 'max' => 255),
             array('hash', 'length', 'max' => 32),
-            array('firstChar', 'length', 'max' => 1),
+            array('firstChar,firstWord,secondWord,thirdWord,fourthWord,lastWord', 'length', 'max' => 1),
             array('cTime', 'default', 'setOnEmpty' => true, 'value' => zmf::now()),
             array('status', 'default', 'setOnEmpty' => true, 'value' => Posts::STATUS_PASSED),
             array('status', 'numerical', 'integerOnly' => true),
@@ -48,13 +48,19 @@ class Chengyu extends CActiveRecord {
             array('id, title, hash, title_tw, pinyin, firstChar, yufa, hits, cTime, status', 'safe', 'on' => 'search'),
         );
     }
-    
-    public function beforeSave(){
-        $this->title=zmf::twTozh($this->title);
-        $this->title_tw=zmf::zhTotw($this->title);
-        $this->hash=md5($this->title);
-        $this->pinyin=  tools::pinyin($this->title);
-        $this->firstChar= substr($this->pinyin, 0,1);        
+
+    public function beforeSave() {
+        $this->title = zmf::twTozh($this->title);
+        $this->title_tw = zmf::zhTotw($this->title);
+        $this->hash = md5($this->title);
+        $this->pinyin = tools::pinyin($this->title);
+        $this->firstChar = substr($this->pinyin, 0, 1);
+        $karr = zmf::chararray($this->title);
+        $this->firstWord = $karr[0];
+        $this->secondWord = $karr[1];
+        $this->thirdWord = $karr[2];
+        $this->fourthWord = $karr[3];
+        $this->lastWord = end($karr);
         return true;
     }
 
@@ -65,12 +71,12 @@ class Chengyu extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'fanYiCis' => array(self::HAS_MANY, 'ChengyuCi', 'cid', 'condition' => 'classify="'.ChengyuCi::CLASSIFY_FANYICI.'"', 'order' => 'id ASC'),//反义词
-            'tongYiCis' => array(self::HAS_MANY, 'ChengyuCi', 'cid', 'condition' => 'classify="'.ChengyuCi::CLASSIFY_TONGYICI.'"', 'order' => 'id ASC'),//同义词
-            'jieShis' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_JIESHI.'" AND `status`='.Posts::STATUS_PASSED, 'order' => 'id ASC'),//解释
-            'chuChus' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_CHUCHU.'" AND `status`='.Posts::STATUS_PASSED, 'order' => 'id ASC'),//出处
-            'liJus' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_LIJU.'" AND `status`='.Posts::STATUS_PASSED, 'order' => 'id ASC'),//例句
-            'guShis' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="'.  ChengyuContent::CLASSIFY_GUSHI.'" AND `status`='.Posts::STATUS_PASSED, 'order' => 'id ASC'),//故事
+            'fanYiCis' => array(self::HAS_MANY, 'ChengyuCi', 'cid', 'condition' => 'classify="' . ChengyuCi::CLASSIFY_FANYICI . '"', 'order' => 'id ASC'), //反义词
+            'tongYiCis' => array(self::HAS_MANY, 'ChengyuCi', 'cid', 'condition' => 'classify="' . ChengyuCi::CLASSIFY_TONGYICI . '"', 'order' => 'id ASC'), //同义词
+            'jieShis' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="' . ChengyuContent::CLASSIFY_JIESHI . '" AND `status`=' . Posts::STATUS_PASSED, 'order' => 'id ASC'), //解释
+            'chuChus' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="' . ChengyuContent::CLASSIFY_CHUCHU . '" AND `status`=' . Posts::STATUS_PASSED, 'order' => 'id ASC'), //出处
+            'liJus' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="' . ChengyuContent::CLASSIFY_LIJU . '" AND `status`=' . Posts::STATUS_PASSED, 'order' => 'id ASC'), //例句
+            'guShis' => array(self::HAS_MANY, 'ChengyuContent', 'cid', 'condition' => 'classify="' . ChengyuContent::CLASSIFY_GUSHI . '" AND `status`=' . Posts::STATUS_PASSED, 'order' => 'id ASC'), //故事
         );
     }
 
@@ -137,14 +143,69 @@ class Chengyu extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-    
-    public static function getNew($limit=50){
-        $items=  Chengyu::model()->findAll(array(
-            'order'=>'cTime DESC',
-            'limit'=>$limit,
-            'select'=>'id,hash,title'
+
+    public static function getNew($limit = 50) {
+        $items = Chengyu::model()->findAll(array(
+            'order' => 'cTime DESC',
+            'limit' => $limit,
+            'select' => 'id,hash,title'
         ));
         return $items;
+    }
+
+    public static function getRelatedWords($word, $notInclude) {
+        $return = array();
+        $wordArr = zmf::chararray($word);
+        $wordArr=$wordArr[0];
+        if ($wordArr[0]) {
+            $items = Chengyu::model()->findAll(array(
+                'condition' => 'firstWord=:w AND status=' . Posts::STATUS_PASSED . ' AND id!=:id',
+                'select' => 'id,`hash`,title',
+                'limit'=>5,
+                'params' => array(
+                    ':w' => $wordArr[0],
+                    ':id' => $notInclude,
+                )
+            ));
+            $return['firstWord']=$items;
+        }
+        if ($wordArr[1]) {
+            $items = Chengyu::model()->findAll(array(
+                'condition' => 'secondWord=:w AND status=' . Posts::STATUS_PASSED . ' AND id!=:id',
+                'select' => 'id,`hash`,title',
+                'limit'=>5,
+                'params' => array(
+                    ':w' => $wordArr[1],
+                    ':id' => $notInclude,
+                )
+            ));
+            $return['secondWord']=$items;
+        }
+        if ($wordArr[2]) {
+            $items = Chengyu::model()->findAll(array(
+                'condition' => 'thirdWord=:w AND status=' . Posts::STATUS_PASSED . ' AND id!=:id',
+                'select' => 'id,`hash`,title',
+                'limit'=>5,
+                'params' => array(
+                    ':w' => $wordArr[2],
+                    ':id' => $notInclude,
+                )
+            ));
+            $return['thirdWord']=$items;
+        }
+        if ($wordArr[3]) {
+            $items = Chengyu::model()->findAll(array(
+                'condition' => 'fourthWord=:w AND status=' . Posts::STATUS_PASSED . ' AND id!=:id',
+                'select' => 'id,`hash`,title',
+                'limit'=>5,
+                'params' => array(
+                    ':w' => $wordArr[3],
+                    ':id' => $notInclude,
+                )
+            ));
+            $return['fourthWord']=$items;
+        }
+        return $return;
     }
 
 }

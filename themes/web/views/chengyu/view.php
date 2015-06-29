@@ -37,7 +37,7 @@ $fanyiis=$model->fanYiCis;
     <?php if(!empty($fanyiis)){?><tr><td>反义词：</td><td><?php foreach($fanyiis as $fanyii){$_ciInfo=$fanyii->chengyuInfo;echo CHtml::link($_ciInfo['title'],array('chengyu/view','id'=>$_ciInfo['id'])).'&nbsp;';}?></td></tr><?php }?>
 </table>
 <?php if(!empty($model->guShis)){$guShis=$model->guShis;?>
-<h4>故事</h4>
+<h4>“<?php echo $model->title;?>”的故事</h4>
   <?php foreach($guShis as $k=>$guShi){?> 
     <div class="media zmf-border-bottom">
         <div class="media-body">
@@ -52,4 +52,41 @@ $fanyiis=$model->fanYiCis;
         </div>
     </div>
   <?php }?>
+<?php }?>
+<?php if(!empty($relatedWords)){?>
+<h4>与“<?php echo $model->title;?>”相关的成语</h4>
+<div class="row">
+    <?php if(!empty($relatedWords['firstWord'])){?>
+    <div class="col-sm-3 col-xs-3">
+        <h5><?php echo $wordArr[0];?>***</h5>
+        <?php foreach($relatedWords['firstWord'] as $_word){?>
+        <p><?php echo CHtml::link($_word['title'],array('chengyu/view','id'=>$_word['id']),array('target'=>'_blank'));?></p>
+        <?php }?>
+    </div>
+    <?php }?>
+    <?php if(!empty($relatedWords['secondWord'])){?>
+    <div class="col-sm-3 col-xs-3">
+        <h5>*<?php echo $wordArr[1];?>**</h5>
+        <?php foreach($relatedWords['secondWord'] as $_word){?>
+        <p><?php echo CHtml::link($_word['title'],array('chengyu/view','id'=>$_word['id']),array('target'=>'_blank'));?></p>
+        <?php }?>
+    </div>
+    <?php }?>
+    <?php if(!empty($relatedWords['thirdWord'])){?>
+    <div class="col-sm-3 col-xs-3">
+        <h5>**<?php echo $wordArr[2];?>*</h5>
+        <?php foreach($relatedWords['thirdWord'] as $_word){?>
+        <p><?php echo CHtml::link($_word['title'],array('chengyu/view','id'=>$_word['id']),array('target'=>'_blank'));?></p>
+        <?php }?>
+    </div>
+    <?php }?>
+    <?php if(!empty($relatedWords['fourthWord'])){?>
+    <div class="col-sm-3 col-xs-3">
+        <h5>***<?php echo $wordArr[3];?></h5>
+        <?php foreach($relatedWords['fourthWord'] as $_word){?>
+        <p><?php echo CHtml::link($_word['title'],array('chengyu/view','id'=>$_word['id']),array('target'=>'_blank'));?></p>
+        <?php }?>
+    </div>
+    <?php }?>    
+</div>
 <?php }?>
