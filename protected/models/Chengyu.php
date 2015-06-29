@@ -35,7 +35,7 @@ class Chengyu extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('title', 'required'),            
-            array('title', 'unique'),            
+            array('hash,title', 'unique'),
             array('title, title_tw, pinyin, yufa,fayin', 'length', 'max' => 255),
             array('hash', 'length', 'max' => 32),
             array('firstChar', 'length', 'max' => 1),
