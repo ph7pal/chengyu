@@ -60,9 +60,9 @@ class CaijiController extends Q {
                     $model->save();
                 }
                 $str = $chengyuID . '#' . $_data['tongyici'] . '#' . $_data['fanyici'];
-                file_put_contents(Yii::app()->basePath . '/runtime/tongyici.txt', $str.PHP_EOL, FILE_APPEND);
+                file_put_contents(Yii::app()->basePath . '/runtime/tongyici.txt', $str . PHP_EOL, FILE_APPEND);
             } else {
-                file_put_contents(Yii::app()->basePath . '/runtime/failed.txt', $file.PHP_EOL, FILE_APPEND);
+                file_put_contents(Yii::app()->basePath . '/runtime/failed.txt', $file . PHP_EOL, FILE_APPEND);
             }
         }
         $url = Yii::app()->createUrl('caiji/t086', array('page' => ($page + 1)));
@@ -74,8 +74,8 @@ class CaijiController extends Q {
         ini_set('max_execution_time', '1800');
 //        $dir = Yii::app()->basePath . '/../../chengyugushi/chengyugushi/';
 //        $total = zmf::readDir($dir, false);
-        $dir=Yii::app()->basePath . '/runtime/failed_gushi.txt';
-        $total=  file($dir);        
+        $dir = Yii::app()->basePath . '/runtime/failed_gushi.txt';
+        $total = file($dir);
         $_total = count($total);
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
         $num = 100;
@@ -85,7 +85,7 @@ class CaijiController extends Q {
             exit('well done');
         }
         foreach ($files as $file) {
-            $file= trim($file);            
+            $file = trim($file);
             $_data = include Yii::app()->basePath . '/../../chengyugushi/chengyugushi/' . $file;
             $_title = str_replace(array('的典故', '典故', '的故事', '故事'), array('', '', '', ''), $_data['title']);
             $_hash = md5($_title);
@@ -106,7 +106,7 @@ class CaijiController extends Q {
         $url = Yii::app()->createUrl('caiji/ertong', array('page' => ($page + 1)));
         $this->message(1, "正在处理第{$page}页", $url, 1);
     }
-    
+
     public function actionEdu() {
         ini_set('memory_limit', '256M');
         ini_set('max_execution_time', '1800');
@@ -157,12 +157,70 @@ class CaijiController extends Q {
                     $model->save();
                 }
                 $str = $chengyuID . '#' . $_data['tongyici'] . '#' . $_data['fanyici'];
-                file_put_contents(Yii::app()->basePath . '/runtime/tongyici.txt', $str.PHP_EOL, FILE_APPEND);
+                file_put_contents(Yii::app()->basePath . '/runtime/tongyici.txt', $str . PHP_EOL, FILE_APPEND);
             } else {
-                file_put_contents(Yii::app()->basePath . '/runtime/failed.txt', $file.PHP_EOL, FILE_APPEND);
+                file_put_contents(Yii::app()->basePath . '/runtime/failed.txt', $file . PHP_EOL, FILE_APPEND);
             }
         }
         $url = Yii::app()->createUrl('caiji/edu', array('page' => ($page + 1)));
+        $this->message(1, "正在处理第{$page}页", $url, 1);
+    }
+
+    public function actionCi() {
+        ini_set('memory_limit', '256M');
+        ini_set('max_execution_time', '1800');
+        $dir = Yii::app()->basePath . '/runtime/tongyici.txt';
+        $files = file($dir);
+        foreach ($files as $file) {
+            $file = trim($file);
+            $_arr = explode('#', $file);
+            if (!$_arr[1] && !$_arr[2]) {
+                continue;
+            }
+            if (strpos($file, '、') !== false) {
+                $_sep = '、';
+            } else {
+                $_sep = ' ';
+            }
+            $_match_t = explode($_sep, $_arr[1]);
+            $_match_f = explode($_sep, $_arr[2]);
+            if (!empty($_match_t)) {
+                foreach ($_match_t as $_one) {
+                    $_one = trim($_one);
+                    $_hash = md5($_one);
+                    $_info = Chengyu::model()->find("`hash`='{$_hash}'");
+                    if ($_info) {
+                        $attr = array(
+                            'cid' => $_arr[0],
+                            'tocid' => $_info['id'],
+                            'classify' => ChengyuCi::CLASSIFY_TONGYICI
+                        );
+                        $model = new ChengyuCi;
+                        $model->attributes = $attr;
+                        $model->save();
+                    }
+                }
+            }
+            if (!empty($_match_f)) {
+                foreach ($_match_f as $_one) {
+                    $_one = trim($_one);
+                    $_hash = md5($_one);
+                    $_info = Chengyu::model()->find("`hash`='{$_hash}'");
+                    if ($_info) {
+                        $attr = array(
+                            'cid' => $_arr[0],
+                            'tocid' => $_info['id'],
+                            'classify' => ChengyuCi::CLASSIFY_FANYICI
+                        );
+                        $model = new ChengyuCi;
+                        $model->attributes = $attr;
+                        $model->save();
+                    }
+                }
+            }
+        }
+        exit('well done');
+        $url = Yii::app()->createUrl('caiji/ci', array('page' => ($page + 1)));
         $this->message(1, "正在处理第{$page}页", $url, 1);
     }
 

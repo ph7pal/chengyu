@@ -33,8 +33,8 @@ $fanyiis=$model->fanYiCis;
     <?php $liJus=$model->liJus;$_total=count($liJus);if(!empty($liJus)){foreach($liJus as $k=>$liJu){?>  
     <tr><td><?php echo $k==0 ? '例句：' : '&nbsp;';?></td><td><?php echo ($_total >1 ? (($k+1).'、'):'').$liJu['content'];?></td></tr>
     <?php }}?>
-    <?php if(!empty($tongyis)){?><tr><td>同义词：</td><td><?php foreach($tongyis as $tongyi){$_ciInfo=$tongyi->chengyuInfo;echo CHtml::link($_ciInfo['title'],array('chengyu/view','id'=>$_ciInfo['id'])).'&nbsp;';}?></td></tr><?php }?>
-    <?php if(!empty($fanyiis)){?><tr><td>反义词：</td><td><?php foreach($fanyiis as $fanyii){$_ciInfo=$fanyii->chengyuInfo;echo CHtml::link($_ciInfo['title'],array('chengyu/view','id'=>$_ciInfo['id'])).'&nbsp;';}?></td></tr><?php }?>
+    <?php if(!empty($tongyis)){?><tr><td>同义词：</td><td class="breadwords"><?php foreach($tongyis as $tongyi){$_ciInfo=$tongyi->chengyuInfo;echo CHtml::link($_ciInfo['title'],array('chengyu/view','id'=>$_ciInfo['id']));}?></td></tr><?php }?>
+    <?php if(!empty($fanyiis)){?><tr><td>反义词：</td><td  class="breadwords"><?php foreach($fanyiis as $fanyii){$_ciInfo=$fanyii->chengyuInfo;echo CHtml::link($_ciInfo['title'],array('chengyu/view','id'=>$_ciInfo['id']));}?></td></tr><?php }?>
 </table>
 <?php if(!empty($model->guShis)){$guShis=$model->guShis;?>
 <h4>“<?php echo $model->title;?>”的故事</h4>

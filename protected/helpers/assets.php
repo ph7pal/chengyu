@@ -14,7 +14,7 @@ class assets {
      * 加载js路径配置文件
      * @param type $type 应用类型，web为旅行，blog为博客
      */
-    public function jsConfig($type = 'web',$module='web') {
+    public function jsConfig($type = 'web', $module = 'web') {
         $arr['web'] = array(
             'baseUrl' => zmf::config('baseurl'),
             'hasLogin' => Yii::app()->user->isGuest ? 'false' : 'true',
@@ -23,8 +23,8 @@ class assets {
             'module' => $module,
             'reputation' => 'false',
             'loginHtml' => '',
-            'addCiUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/addCi'),//添加同义词
-            'delCiUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/delCi'),//删除同义词
+            'addCiUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/addCi'), //添加同义词
+            'delCiUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/delCi'), //删除同义词
             'reportUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/report'),
             'delUploadImgUrl' => zmf::config('domain') . Yii::app()->createUrl('/attachments/delUploadImg'),
             'csrfToken' => Yii::app()->request->csrfToken,
@@ -56,10 +56,10 @@ class assets {
 //            $cs->registerCssFile($staticUrl . 'common/css/font-awesome.min.css');
 //            $cs->registerCssFile($staticUrl . 'common/css/font-awesome-ie7.min.css');
             $cs->registerCssFile($staticUrl . 'common/css/newsoul.css');
-//            $cs->registerCoreScript('jquery');
-//            $cs->registerScriptFile($staticUrl . "common/js/bootstrap.min.js", CClientScript::POS_END);
-//            $cs->registerScriptFile($staticUrl . "common/js/card.js", CClientScript::POS_END);
-//            $cs->registerScriptFile($staticUrl . "common/js/zmf.js", CClientScript::POS_END);
+            if (in_array(Yii::app()->getController()->id, array('siteinfo','chengyu')) && in_array(Yii::app()->getController()->getAction()->id, array('create','update'))) {
+                $cs->registerCoreScript('jquery');
+                $cs->registerScriptFile($staticUrl . "common/js/zmf.js", CClientScript::POS_END);
+            }
         }
     }
 

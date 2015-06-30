@@ -4,7 +4,7 @@ class ChengyuController extends Q {
 
     public function actionIndex() {
         $criteria = new CDbCriteria();
-        $criteria->order = 'cTime DESC';
+        $criteria->order = 'hits DESC';
         $char = tools::val('char', 't', 1);
         if ($char) {
             $criteria->addCondition("firstChar='{$char}'");
@@ -55,6 +55,7 @@ class ChengyuController extends Q {
             $conStr = join('AND', $conditionArr);
             $sql = "SELECT id,`hash`,title FROM {{chengyu}} WHERE ({$conStr}) AND `status`=" . Posts::STATUS_PASSED . " LIMIT 30";
             $posts = Yii::app()->db->createCommand($sql)->queryAll();
+            SearchRecords::checkAndUpdate($keyword);
         }
         $data = array(
             'posts' => $posts

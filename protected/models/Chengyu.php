@@ -35,7 +35,7 @@ class Chengyu extends CActiveRecord {
         // will receive user inputs.
         return array(
             array('title', 'required'),
-            array('hash,title', 'unique'),
+            array('hash,title', 'unique', 'on' => 'create'),
             array('title, title_tw, pinyin, yufa,fayin', 'length', 'max' => 255),
             array('hash', 'length', 'max' => 32),
             array('firstChar,firstWord,secondWord,thirdWord,fourthWord,lastWord', 'length', 'max' => 1),
@@ -156,56 +156,71 @@ class Chengyu extends CActiveRecord {
     public static function getRelatedWords($word, $notInclude) {
         $return = array();
         $wordArr = zmf::chararray($word);
-        $wordArr=$wordArr[0];
+        $wordArr = $wordArr[0];
         if ($wordArr[0]) {
             $items = Chengyu::model()->findAll(array(
                 'condition' => 'firstWord=:w AND status=' . Posts::STATUS_PASSED . ' AND id!=:id',
-                'select' => 'id,`hash`,title',
-                'limit'=>5,
+                'select' => 'id,title',
+                'limit' => 5,
                 'params' => array(
                     ':w' => $wordArr[0],
                     ':id' => $notInclude,
                 )
             ));
-            $return['firstWord']=$items;
+            $return['firstWord'] = $items;
         }
         if ($wordArr[1]) {
             $items = Chengyu::model()->findAll(array(
                 'condition' => 'secondWord=:w AND status=' . Posts::STATUS_PASSED . ' AND id!=:id',
-                'select' => 'id,`hash`,title',
-                'limit'=>5,
+                'select' => 'id,title',
+                'limit' => 5,
                 'params' => array(
                     ':w' => $wordArr[1],
                     ':id' => $notInclude,
                 )
             ));
-            $return['secondWord']=$items;
+            $return['secondWord'] = $items;
         }
         if ($wordArr[2]) {
             $items = Chengyu::model()->findAll(array(
                 'condition' => 'thirdWord=:w AND status=' . Posts::STATUS_PASSED . ' AND id!=:id',
-                'select' => 'id,`hash`,title',
-                'limit'=>5,
+                'select' => 'id,title',
+                'limit' => 5,
                 'params' => array(
                     ':w' => $wordArr[2],
                     ':id' => $notInclude,
                 )
             ));
-            $return['thirdWord']=$items;
+            $return['thirdWord'] = $items;
         }
         if ($wordArr[3]) {
             $items = Chengyu::model()->findAll(array(
                 'condition' => 'fourthWord=:w AND status=' . Posts::STATUS_PASSED . ' AND id!=:id',
-                'select' => 'id,`hash`,title',
-                'limit'=>5,
+                'select' => 'id,title',
+                'limit' => 5,
                 'params' => array(
                     ':w' => $wordArr[3],
                     ':id' => $notInclude,
                 )
             ));
-            $return['fourthWord']=$items;
+            $return['fourthWord'] = $items;
         }
-        return $return;
+        $real=array();
+        foreach ($return as $k => $v) {
+            $tmp=array();
+            foreach ($v as $k2 => $v2) {
+                $tmp[]=array(
+                    'id'=>$v2['id'],
+                    'title'=>$v2['title'],
+                );
+            }
+            $real[$k] = $tmp;
+        }
+        return $real;
+    }
+
+    private function filterValue($var) {
+        return is_null($var) ? false : false;
     }
 
 }

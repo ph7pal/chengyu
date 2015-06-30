@@ -1,4 +1,5 @@
 <?php
+
 $rewrite = require('rewrite.php');
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
@@ -22,18 +23,22 @@ return array(
                 '192.168.1.106',
                 '::1'
             )
-        )
+        ),
+        'api' => array(
+            'class' => 'application.modules.api.ApiModule',
+            'defaultController' => 'index'
+        ),
     ),
     'defaultController' => 'index',
     'components' => array(
         'request' => array(
-            'enableCsrfValidation' => true, //防范跨站请求伪造(简称CSRF)攻击              
-            'enableCookieValidation' => true, //对cookie的值进行HMAC检查
+            'enableCsrfValidation' => false, //防范跨站请求伪造(简称CSRF)攻击              
+            'enableCookieValidation' => false, //对cookie的值进行HMAC检查
         ),
         'user' => array(
             'identityCookie' => array('domain' => '.newsoul.cn', 'path' => '/'),
             'allowAutoLogin' => true,
-            'stateKeyPrefix' => 'zmf_newsoul',
+            'stateKeyPrefix' => 'zmf_chengyu',
             'loginUrl' => array(
                 'site/login'
             )
@@ -49,6 +54,12 @@ return array(
         'db' => require('db.php'),
         'errorHandler' => array(
             'errorAction' => 'error/index',
+        ),
+        'image' => array(
+            'class' => 'application.extensions.image.CImageComponent',
+            'driver' => 'GD',
+            'params' => array(
+            )
         ),
         'urlManager' => $rewrite,
         'filecache' => array(

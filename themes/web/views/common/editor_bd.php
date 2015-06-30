@@ -8,9 +8,10 @@ $upurl=isset($uploadurl) ? $uploadurl : Yii::app()->createUrl('attachments/uploa
     (function(){window.UMEDITOR_CONFIG={UMEDITOR_HOME_URL:URL}})();
 </script>
 <?php
-Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/ueditor/umeditor.js', CClientScript::POS_END);
-Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/ueditor/lang/zh-cn/zh-cn.js', CClientScript::POS_END);
-Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/common/uploadify/jquery.uploadify-3.1.min.js', CClientScript::POS_END);
+$cs = Yii::app()->clientScript;
+$cs->registerScriptFile(Yii::app()->baseUrl.'/ueditor/umeditor.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->baseUrl.'/ueditor/lang/zh-cn/zh-cn.js', CClientScript::POS_END);
+$cs->registerScriptFile(Yii::app()->baseUrl.'/common/uploadify/jquery.uploadify-3.1.min.js', CClientScript::POS_END);
 ?>
 <textarea id="<?php echo CHtml::activeId($model,$attri);?>" name="<?php echo CHtml::activeName($model,$attri);?>" style="width:500px;height:200px;">
 <?php echo zmf::text(array('action'=>'edit','encode'=>'yes'),$content);?>

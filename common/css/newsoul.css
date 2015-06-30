@@ -71,8 +71,11 @@ body {
 }
 /*成语列表字母*/
 .char-bar a{
-    margin-right: 5px;
+    margin-right: 3px;
 }
+.breadwords>a{display:inline-block;}
+.breadwords>a+a:before{content:"/\00a0";padding:0 5px;color:#ccc}
+.breadwords>a:hover{text-decoration: none}
 /*自定义的颜色*/
 .color-grey,.color-grey a{
     color:#999

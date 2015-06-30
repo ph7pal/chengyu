@@ -1,4 +1,5 @@
 <?php
+
 return array(
     'urlFormat' => 'path', //get
     'showScriptName' => false, //隐藏index.php   

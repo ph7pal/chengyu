@@ -684,16 +684,32 @@ class zmf {
         return CHtml::link('<span class="icon-link"></span> 网页链接', $_url, array('target' => '_blank'));
     }
 
-    public static function filterInput($str, $type = 'n', $textonly = false) {
-        if ($textonly) {
+    /**
+     * 过滤输入
+     * @param type $str
+     * @param type $type
+     * @param type $textonly 0富文本，1纯文本，2数字
+     * @return type
+     */
+    public static function filterInput($str, $type = 'n', $textonly = false) { 
+        if ($textonly || $type===1) {
             $str = strip_tags(trim($str));
+            $str = preg_replace('/\r\n|\r|\n/i', '', $str);
         }
-        if ($type === 'n') {
-            $str = intval($str);
-        } elseif ($type === 't') {
-            //$str = addslashes($str);
+        if ($type === 'n' || $type===2) {
+            $str = self::myint($str);
         }
         return $str;
+    }
+    
+    /**
+     * 仅返回整数
+     * intval、(int)在32位系统上有问题
+     * @param type $s
+     * @return type
+     */
+    public static function myint($s) {
+        return($a = preg_replace('/[^\-\d]*(\-?\d*).*/', '$1', $s)) ? $a : '0';
     }
 
     public static function filterOutput($str, $encode = false) {
