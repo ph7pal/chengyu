@@ -8,7 +8,7 @@ class AttachmentsController extends Q {
         $reImgsize = zmf::filterInput($_GET['imgsize']); //返回图片的尺寸
         $fileholder = zmf::filterInput($_GET['fileholder'], 't', 1); //上传控件的ID
         //将ads替换为flash
-        if (!isset($uptype) OR ! in_array($uptype, array('siteinfo'))) {
+        if (!isset($uptype) OR ! in_array($uptype, array('siteinfo','post'))) {
             $this->jsonOutPut(0, '请设置上传所属类型' . $uptype);
         }
         if (Yii::app()->request->getParam('PHPSESSID')) {
@@ -52,11 +52,7 @@ class AttachmentsController extends Q {
         );
         if (move_uploaded_file($_FILES[$fileholder]["tmp_name"], $origin . $fileName)) {
             $data = array();
-            if ($uptype == 'posts') {
-                $status = Posts::STATUS_DELED;
-            } else {
-                $status = Posts::STATUS_PASSED;
-            }
+            $status = Posts::STATUS_PASSED;            
             $data['uid'] = Yii::app()->user->id;
             $data['logid'] = $logid;
             $data['filePath'] = $fileName;

@@ -2,6 +2,7 @@
 $this->breadcrumbs = array(
     CHtml::link('首页', zmf::config('baseurl')),
     '词语大全' => array('index'),
+    CHtml::link('词语故事',array('chengyu/story')),
     $model->title,
 );
 $this->menu = array(

@@ -1,7 +1,8 @@
 <?php
 $this->breadcrumbs=array(
     CHtml::link('首页',zmf::config('baseurl')),
-	'词语大全',
+    '词语大全',
+    CHtml::link('词语故事',array('chengyu/story')),	
 );
 $this->menu=array(
 	array('label'=>'新增', 'url'=>array('create')),

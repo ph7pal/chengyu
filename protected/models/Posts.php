@@ -227,4 +227,22 @@ class Posts extends CActiveRecord {
         $model->updateCounters(array($field => $num), ':id=id', array(':id' => $keyid));
     }
 
+    public static function getAll($params, &$pages, &$comLists) {
+        $sql = $params['sql'];
+        if (!$sql) {
+            return false;
+        }
+        $pageSize = $params['pageSize'];
+        $_size = isset($pageSize) ? $pageSize : 30;
+        $com = Yii::app()->db->createCommand($sql)->query();
+        $pages = new CPagination($com->rowCount);
+        $criteria = new CDbCriteria();
+        $pages->pageSize = $_size;
+        $pages->applylimit($criteria);
+        $com = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
+        $com->bindValue(':offset', $pages->currentPage * $pages->pageSize);
+        $com->bindValue(':limit', $pages->pageSize);
+        $comLists = $com->queryAll();
+    }
+
 }

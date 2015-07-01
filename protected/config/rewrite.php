@@ -11,6 +11,7 @@ return array(
         'dict-<char:\w+>' => 'chengyu/index',
         'dict' => 'chengyu/index',
         'detail/<id:\d+>' => 'chengyu/view',
+        'story-<page:\d+>' => 'chengyu/story',
         '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
         '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
     )

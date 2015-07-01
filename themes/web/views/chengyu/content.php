@@ -7,7 +7,7 @@
  * @copyright Copyright©2015 阿年飞少 
  * @datetime 2015-6-23  17:30:52 
  */
-$uploadurl=Yii::app()->createUrl('attachments/upload',array('type'=>'question','imgsize'=>600));
+$uploadurl=Yii::app()->createUrl('attachments/upload',array('type'=>'post','imgsize'=>600));
 $this->breadcrumbs = array(
     CHtml::link('首页', zmf::config('baseurl')),
     '词语大全' => array('index'),
@@ -33,6 +33,11 @@ $this->menu = array(
     'enableAjaxValidation'=>false,
 )); ?>
     <?php echo $form->errorSummary($model); ?>
+    <div class="form-group">
+		<?php echo $form->labelEx($model,'type'); ?>
+		<?php echo $form->dropDownList($model,'type', ChengyuContent::getTypes('admin'),array('class'=>'form-control')); ?>
+		<?php echo $form->error($model,'type'); ?>
+    </div>
     <div class="form-group">
         <?php echo $form->labelEx($model,'content'); ?>
         <?php if($model->classify==ChengyuContent::CLASSIFY_GUSHI){$this->renderPartial('//common/editor_bd', array('model' => $model,'content' => $model->content,'uploadurl'=>$uploadurl));}else{echo $form->textArea($model,'content',array('rows'=>6, 'cols'=>50,'class'=>'form-control'));}?>

@@ -19,6 +19,22 @@ class ChengyuController extends Q {
             'posts' => $posts,
         ));
     }
+    
+    public function actionStory() {
+        $sql = "SELECT c.id,c.title,c.fayin,cc.content FROM {{chengyu}} c,{{chengyu_content}} cc WHERE cc.classify='" . ChengyuContent::CLASSIFY_GUSHI . "' AND cc.cid=c.id AND cc.status=" . Posts::STATUS_PASSED . " ORDER BY cc.cTime DESC";
+        Posts::getAll(array('sql' => $sql), $pages, $posts);
+        if (!empty($posts)) {
+            foreach ($posts as $k => $v) {
+                $posts[$k]['content'] = zmf::subStr($v['content'], 280);
+            }
+        }
+        $this->pageTitle='成语故事 - '.zmf::config('sitename');
+        $data = array(
+            'posts' => $posts,
+            'pages' => $pages,
+        );
+        $this->render('story',$data);
+    }
 
     public function actionView($id) {
         $id = zmf::filterInput($id);

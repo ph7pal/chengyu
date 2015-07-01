@@ -17,15 +17,18 @@
  * @property integer $classify
  */
 class ChengyuContent extends CActiveRecord {
-    
-    const CLASSIFY_JIESHI=1;
-    const CLASSIFY_CHUCHU=2;
-    const CLASSIFY_LIJU=3;
-    const CLASSIFY_GUSHI=4;
+
+    const CLASSIFY_JIESHI = 1;
+    const CLASSIFY_CHUCHU = 2;
+    const CLASSIFY_LIJU = 3;
+    const CLASSIFY_GUSHI = 4;
+    const TYPE_ZC = 1; //正常解释
+    const TYPE_WL = 2; //网络解释
 
     /**
      * @return string the associated database table name
      */
+
     public function tableName() {
         return '{{chengyu_content}}';
     }
@@ -39,7 +42,7 @@ class ChengyuContent extends CActiveRecord {
         return array(
             array('cid, content, classify', 'required'),
             array('status', 'default', 'setOnEmpty' => true, 'value' => Posts::STATUS_PASSED),
-            array('status, top, classify', 'numerical', 'integerOnly' => true),
+            array('status, top, classify,type', 'numerical', 'integerOnly' => true),
             array('cTime', 'default', 'setOnEmpty' => true, 'value' => zmf::now()),
             array('cid, uid, hits, comments, favors, cTime', 'length', 'max' => 10),
             // The following rule is used by search().
@@ -75,6 +78,7 @@ class ChengyuContent extends CActiveRecord {
             'favors' => '赞的数量',
             'cTime' => '创建时间',
             'classify' => '分类：解释、出处、例句、故事',
+            'type' => '内容类型：正常解释、网络解释',
         );
     }
 
@@ -121,15 +125,31 @@ class ChengyuContent extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
-    
-    public static function getNew(){
-        $items= ChengyuContent::model()->findAll(array(
-            'condition'=>"classify='".ChengyuContent::CLASSIFY_GUSHI."' AND `status`=".Posts::STATUS_PASSED,
-            'order'=>'cTime DESC',
-            'limit'=>20,
-            'select'=>'id,cid,content'
+
+    public static function getNew() {
+        $items = ChengyuContent::model()->findAll(array(
+            'condition' => "classify='" . ChengyuContent::CLASSIFY_GUSHI . "' AND type='".ChengyuContent::TYPE_ZC."' AND `status`=" . Posts::STATUS_PASSED,
+            'order' => 'cTime DESC',
+            'limit' => 20,
+            'select' => 'id,cid,content'
         ));
         return $items;
+    }
+    public static function getXinJie() {
+        $sql = "SELECT c.id,c.title,cc.content FROM {{chengyu}} c,{{chengyu_content}} cc WHERE cc.classify='" . ChengyuContent::CLASSIFY_JIESHI . "' AND cc.type='".ChengyuContent::TYPE_WL."' AND cc.cid=c.id AND cc.status=" . Posts::STATUS_PASSED . " ORDER BY cc.cTime DESC LIMIT 10";
+        $items=  Yii::app()->db->createCommand($sql)->queryAll();
+        return $items;
+    }
+
+    public static function getTypes($type) {
+        $arr = array(
+            ChengyuContent::TYPE_ZC => '原意',
+            ChengyuContent::TYPE_WL => '新解',
+        );
+        if($type=='admin'){
+            return $arr;
+        }
+        return $arr[$type];
     }
 
 }

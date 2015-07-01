@@ -49,3 +49,4 @@ alter table pre_chengyu add fayin varchar(255) not null;
 alter table pre_chengyu add firstWord char(1) not null,add secondWord char(1) not null,add thirdWord char(1) not null,add fourthWord char(1) not null,add lastWord char(1) not null;
 update pre_chengyu set firstWord=SUBSTR(title FROM 1 FOR 1);
 update pre_chengyu set secondWord=SUBSTR(title FROM 2 FOR 1),thirdWord=SUBSTR(title FROM 3 FOR 1),fourthWord=SUBSTR(title FROM 4 FOR 1),lastWord=SUBSTR(title FROM -1 FOR 1);
+alter table pre_chengyu_content add type tinyint(1) UNSIGNED not null DEFAULT 1;
