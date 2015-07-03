@@ -3,6 +3,7 @@
 $rewrite = require('rewrite.php');
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
+    'language' => 'zh_cn',
     'theme' => 'web',
     'preload' => array('log'),
     'onBeginRequest' => create_function('$event', 'return ob_start("ob_gzhandler");'),

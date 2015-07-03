@@ -24,6 +24,9 @@ class SiteinfoController extends Q {
     }
 
     public function actionCreate($id = '') {
+        if (!$this->uid) {
+            $this->redirect(array('site/login'));
+        }
         if ($id) {
             $model = $this->loadModel($id);
         } else {

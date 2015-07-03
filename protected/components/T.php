@@ -10,33 +10,9 @@ class T extends CController {
     protected $platform;
 
     public function init() {
-        //zh_tw\en_us
-        Yii::app()->language = 'zh_cn';
-//    if (isset($_GET['lang']) && in_array($_GET['lang'], array('zh_cn', 'zh_tw', 'en'))) {
-//      Yii::app()->language = $_GET['lang'];
-//      zmf::delCookie('lang');
-//      zmf::setCookie('lang', $_GET['lang']);
-//    }
-//    $lang=zmf::getCookie('lang');
-//    if($lang!=''){
-//      Yii::app()->language = $lang;
-//    } else {
-//      $countryCode = zmf::getCountryByIp();
-//      $countryCode =  strtoupper($countryCode);
-//      if ($countryCode == 'CN') {
-//        Yii::app()->language = 'zh_cn';
-//      } elseif (in_array($countryCode, array('HK', 'MO','TW'))) {
-//        Yii::app()->language = 'zh_tw';  
-//      } elseif ($countryCode == 'IANA') {
-//        Yii::app()->language = 'zh_cn';
-//      } else {
-//        Yii::app()->language = 'en';
-//      }
-//      zmf::setCookie('lang', Yii::app()->language);
-//    }
         if (zmf::config('mobile')) {
             if (tools::checkmobile($this->platform)) {
-                Yii::app()->theme = 'frozen';
+                Yii::app()->theme = 'mobile';
                 $this->isMobile = 'yes';
             }
         }

@@ -22,7 +22,7 @@ class AjaxController extends Q {
         if (Yii::app()->request->isAjaxRequest && isset($_GET['q'])) {
             $name = $_GET['q'];
             $criteria = new CDbCriteria;
-            $criteria->condition = "title LIKE :keyword OR title_tw LIKE :keyword OR pinyin LIKE :keyword";
+            $criteria->condition = "(title LIKE :keyword OR title_tw LIKE :keyword OR pinyin LIKE :keyword) AND status=".Posts::STATUS_PASSED;
             $criteria->params = array(':keyword' => '%' . strtr($name, array('%' => '\%', '_' => '\_', '\\' => '\\\\')) . '%');
             $criteria->limit = 10;
             $criteria->select = 'id,title';

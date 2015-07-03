@@ -60,6 +60,11 @@ class assets {
                 $cs->registerCoreScript('jquery');
                 $cs->registerScriptFile($staticUrl . "common/js/zmf.js", CClientScript::POS_END);
             }
+        }elseif($type=='mobile'){
+            $cs->registerCssFile($staticUrl . 'common/css/frozen.css');
+            $cs->registerCssFile($staticUrl . 'common/css/mobile.css');
+            $cs->registerScriptFile($staticUrl . "common/js/zepto.min.js", CClientScript::POS_END);
+            $cs->registerScriptFile($staticUrl . "common/js/frozen.js", CClientScript::POS_END);
         }
     }
 

@@ -73,6 +73,10 @@ body {
 .char-bar a{
     margin-right: 3px;
 }
+.filterBar{
+    height: 30px;background: #F2F2F2;padding: 5px;clear: both
+}
+/*详细页面同义词*/
 .breadwords>a{display:inline-block;}
 .breadwords>a+a:before{content:"/\00a0";padding:0 5px;color:#ccc}
 .breadwords>a:hover{text-decoration: none}

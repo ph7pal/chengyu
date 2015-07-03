@@ -21,7 +21,20 @@ class ChengyuController extends Q {
     }
     
     public function actionStory() {
-        $sql = "SELECT c.id,c.title,c.fayin,cc.content FROM {{chengyu}} c,{{chengyu_content}} cc WHERE cc.classify='" . ChengyuContent::CLASSIFY_GUSHI . "' AND cc.cid=c.id AND cc.status=" . Posts::STATUS_PASSED . " ORDER BY cc.cTime DESC";
+        $filter=  tools::val('filter');
+        $order=  tools::val('order');
+        $where=$orderBy='';
+        if($filter==1){
+            $where=" AND type='".ChengyuContent::TYPE_ZC."'";
+        }elseif($filter==2){
+            $where=" AND type='".ChengyuContent::TYPE_WL."'";
+        }
+        if($order==2){
+            $orderBy='c.hits';
+        }else{
+            $orderBy='cc.cTime';
+        }
+        $sql = "SELECT c.id,c.title,c.fayin,cc.content FROM {{chengyu}} c,{{chengyu_content}} cc WHERE cc.classify='" . ChengyuContent::CLASSIFY_GUSHI . "' {$where} AND cc.cid=c.id AND cc.status=" . Posts::STATUS_PASSED . " ORDER BY {$orderBy} DESC";
         Posts::getAll(array('sql' => $sql), $pages, $posts);
         if (!empty($posts)) {
             foreach ($posts as $k => $v) {
@@ -39,6 +52,9 @@ class ChengyuController extends Q {
     public function actionView($id) {
         $id = zmf::filterInput($id);
         $info = $this->loadModel($id);
+        if($info['status']!=Posts::STATUS_PASSED){
+            throw new CHttpException(404, 'The requested page does not exist.');
+        }
         Posts::updateCount($id, 'Chengyu');
         $relatedWords=  Chengyu::getRelatedWords($info['title'], $id);
         $wordArr=zmf::chararray($info['title']);
@@ -227,7 +243,11 @@ class ChengyuController extends Q {
         if (!$this->uid) {
             $this->redirect(array('site/login'));
         }
-        $this->loadModel($id)->delete();
+        $info=$this->loadModel($id);
+        if(!$info){
+            $this->message(0, '页面不存在');
+        }
+        Chengyu::model()->updateByPk($id, array('status'=>  Posts::STATUS_DELED));
         $this->redirect(array('chengyu/index'));
     }
 
