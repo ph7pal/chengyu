@@ -17,7 +17,7 @@
   </head>
   <body ontouchstart>
       <header class="ui-header ui-header-positive ui-border-b" style="height: 120px">
-            <h1>基础样式 </h1>
+          <?php echo CHtml::link('<h1>'.zmf::config('sitename').'</h1>',zmf::config('baseurl'),array('class'=>'text-logo'));?>
       </header>
     <?php echo $content; ?>
     <?php $this->renderPartial('/common/footer');?>

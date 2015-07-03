@@ -4,12 +4,12 @@
  $this->widget('CLinkPager',
          array(
             'header'=>'',
-             'firstPageLabel' => zmf::t('firstPage'),
-             'lastPageLabel' => zmf::t('lastPage'),    
+             'firstPageLabel' => '',
+             'lastPageLabel' => '',    
              'prevPageLabel' => zmf::t('prevPage'),    
              'nextPageLabel' => zmf::t('nextPage'),    
              'pages' => $pages,    
-             'maxButtonCount'=>4 
+             'maxButtonCount'=>0
          )         
          );
  ?>
