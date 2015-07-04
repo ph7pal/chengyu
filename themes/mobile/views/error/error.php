@@ -1,4 +1,5 @@
-<div class="alert alert-danger" role="alert">
-<h1><?php echo $code; ?></h1>
-<div class="message"><?php echo nl2br(CHtml::encode($message)); ?></div>
+<div class="ui-tooltips ui-tooltips-warn">
+    <div class="ui-tooltips-cnt ui-border-b">
+        <i></i>错误<?php echo $code; ?>：<?php echo nl2br(CHtml::encode($message)); ?>
+    </div>
 </div>

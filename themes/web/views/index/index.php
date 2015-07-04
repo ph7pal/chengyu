@@ -5,16 +5,6 @@ $this->breadcrumbs = array(
     CHtml::link('词语故事',array('chengyu/story')),
 );
 ?>
-<?php if(!empty($new)){?>
-<h3>最新收录</h3>
-<div class="zmf-border-bottom clearfix">
-    <?php foreach($new as $_new){?>
-    <?php echo CHtml::link(zmf::subStr($_new['title'],15),array('chengyu/view','id'=>$_new['id']),array('class'=>'col-list-item','title'=>$_new['title']));?> 
-    <?php }?>
-    <?php echo CHtml::link('查看更多>>',array('chengyu/index'),array('class'=>'col-list-item color-grey'));?>
-</div>
-<?php }?>
-<div class="clearfix"></div>
 <?php if(!empty($xinjie)){?>
 <h3>词语新解</h3>
 <?php foreach($xinjie as $_xinjie){?>
@@ -38,3 +28,13 @@ $this->breadcrumbs = array(
 </div>
 <?php }?>
 <?php }?>
+<div class="clearfix"></div>
+<?php if(!empty($new)){?>
+<h3>最新收录</h3>
+<div class="zmf-border-bottom clearfix">
+    <?php foreach($new as $_new){?>
+    <?php echo CHtml::link(zmf::subStr($_new['title'],15),array('chengyu/view','id'=>$_new['id']),array('class'=>'col-list-item','title'=>$_new['title']));?> 
+    <?php }?>
+    <?php echo CHtml::link('查看更多>>',array('chengyu/index'),array('class'=>'col-list-item color-grey'));?>
+</div>
+<?php }

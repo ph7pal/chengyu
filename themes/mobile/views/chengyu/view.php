@@ -17,13 +17,13 @@ $fanyiis=$model->fanYiCis;
             <?php if($model->title_tw!=''){?><tr><td style="width: 80px">繁体：</td><td><?php echo $model->title_tw;?></td></tr><?php }?>
             <?php if($model->yufa!=''){?><tr><td>语法：</td><td><?php echo $model->yufa;?></td></tr><?php }?>
             <?php $jies=$model->jieShis;$_total=count($jies);if(!empty($jies)){foreach($jies as $k=>$jieshi){?>  
-            <tr><td><?php echo $k==0 ? '解释：' : '&nbsp;';?></td><td><?php echo ($_total >1 ? (($k+1).'、'):'').($jieshi['type']==ChengyuContent::TYPE_WL ? '<span class="badge">新解</span>':'').$jieshi['content'];if($this->uid){echo CHtml::link('编辑',array('chengyu/content','id'=>$model->id,'ccid'=>$jieshi['id'])).'&nbsp;'.CHtml::link('删除',array('chengyu/delcontent','id'=>$jieshi['id']));}?></td></tr>
+            <tr><td><?php echo $k==0 ? '解释：' : '&nbsp;';?></td><td><?php echo ($_total >1 ? (($k+1).'、'):'').($jieshi['type']==ChengyuContent::TYPE_WL ? '<span class="badge">新解</span>':'').$jieshi['content'];?></td></tr>
             <?php }}?>
             <?php $chuChus=$model->chuChus;$_total=count($chuChus);if(!empty($chuChus)){foreach($chuChus as $k=>$chuChu){?>  
-            <tr><td><?php echo $k==0 ? '出处：' : '&nbsp;';?></td><td><?php echo ($_total >1 ? (($k+1).'、'):'').($chuChu['type']==ChengyuContent::TYPE_WL ? '<span class="badge">新解</span>':'').$chuChu['content'];if($this->uid){echo CHtml::link('编辑',array('chengyu/content','id'=>$model->id,'ccid'=>$chuChu['id'])).'&nbsp;'.CHtml::link('删除',array('chengyu/delcontent','id'=>$chuChu['id']));}?></td></tr>
+            <tr><td><?php echo $k==0 ? '出处：' : '&nbsp;';?></td><td><?php echo ($_total >1 ? (($k+1).'、'):'').($chuChu['type']==ChengyuContent::TYPE_WL ? '<span class="badge">新解</span>':'').$chuChu['content'];?></td></tr>
             <?php }}?>
             <?php $liJus=$model->liJus;$_total=count($liJus);if(!empty($liJus)){foreach($liJus as $k=>$liJu){?>  
-            <tr><td><?php echo $k==0 ? '例句：' : '&nbsp;';?></td><td><?php echo ($_total >1 ? (($k+1).'、'):'').($liJu['type']==ChengyuContent::TYPE_WL ? '<span class="badge">新解</span>':'').$liJu['content'];if($this->uid){echo CHtml::link('编辑',array('chengyu/content','id'=>$model->id,'ccid'=>$liJu['id'])).'&nbsp;'.CHtml::link('删除',array('chengyu/delcontent','id'=>$liJu['id']));}?></td></tr>
+            <tr><td><?php echo $k==0 ? '例句：' : '&nbsp;';?></td><td><?php echo ($_total >1 ? (($k+1).'、'):'').($liJu['type']==ChengyuContent::TYPE_WL ? '<span class="badge">新解</span>':'').$liJu['content'];?></td></tr>
             <?php }}?>
             <?php if(!empty($tongyis)){?><tr><td>同义词：</td><td class="breadwords"><?php foreach($tongyis as $tongyi){$_ciInfo=$tongyi->chengyuInfo;echo CHtml::link($_ciInfo['title'],array('chengyu/view','id'=>$_ciInfo['id']));}?></td></tr><?php }?>
             <?php if(!empty($fanyiis)){?><tr><td>反义词：</td><td  class="breadwords"><?php foreach($fanyiis as $fanyii){$_ciInfo=$fanyii->chengyuInfo;echo CHtml::link($_ciInfo['title'],array('chengyu/view','id'=>$_ciInfo['id']));}?></td></tr><?php }?>
@@ -47,57 +47,52 @@ $fanyiis=$model->fanYiCis;
 <?php }?>
 
 <?php if(!empty($relatedWords)){?>
+<?php if(!empty($relatedWords['firstWord'])){?>
 <div class="mod-header">
-    <h2>与“<?php echo $model->title;?>”相关的成语</h2>
+    <h3>第一个字为“<?php echo $wordArr[0];?>”的成语</h3>
 </div>
-
-<div class="wrap-container">
-    <div class="wrap-content">
-        <ul class="ui-row">
-            <?php if(!empty($relatedWords['firstWord'])){?>
-            <li class="ui-col ui-col-50">
-                <div class="">
-                    <p><?php echo $wordArr[0];?>***</p>
-                    <?php foreach($relatedWords['firstWord'] as $_word){?>
-                    <p><?php echo CHtml::link($_word['title'],array('chengyu/view','id'=>$_word['id']),array('target'=>'_blank'));?></p>
-                    <?php }?>
-                </div>
-            </li>
-            <?php }?>
-            <?php if(!empty($relatedWords['secondWord'])){?>
-            <li class="ui-col ui-col-50">
-                <div class="">
-                    <p>*<?php echo $wordArr[1];?>**</p>
-                    <?php foreach($relatedWords['secondWord'] as $_word){?>
-                    <p><?php echo CHtml::link($_word['title'],array('chengyu/view','id'=>$_word['id']),array('target'=>'_blank'));?></p>
-                    <?php }?>
-                </div>
-            </li>
-            <?php }?>
-            <div style="clear: both;margin: 5px 0"></div>
-            <?php if(!empty($relatedWords['thirdWord'])){?>
-            <li class="ui-col ui-col-50">
-                <div class="">
-                    <p>**<?php echo $wordArr[2];?>*</p>
-                    <?php foreach($relatedWords['thirdWord'] as $_word){?>
-                    <p><?php echo CHtml::link($_word['title'],array('chengyu/view','id'=>$_word['id']),array('target'=>'_blank'));?></p>
-                    <?php }?>
-                </div>
-                
-            </li>
-            <?php }?>
-            <?php if(!empty($relatedWords['fourthWord'])){?>
-            <li class="ui-col ui-col-50">
-                <div class="">
-                    <p>***<?php echo $wordArr[3];?></p>
-                    <?php foreach($relatedWords['fourthWord'] as $_word){?>
-                    <p><?php echo CHtml::link($_word['title'],array('chengyu/view','id'=>$_word['id']),array('target'=>'_blank'));?></p>
-                    <?php }?>
-                </div>
-                
-            </li>
-            <?php }?>  
-        </ul>
-    </div>
+<ul class="ui-list ui-list-pure ui-border-tb">
+    <?php foreach($relatedWords['firstWord'] as $_word){?>
+    <li class="ui-border-t ui-form-item-link" data-href="<?php echo Yii::app()->createUrl('chengyu/view',array('id'=>$_word['id']));?>">
+        <?php echo CHtml::link($_word['title'],array('chengyu/view','id'=>$_word['id']));?>
+    </li>
+    <?php }?>
+</ul>
+<?php }?>
+<?php if(!empty($relatedWords['secondWord'])){?>
+<div class="mod-header">
+    <h3>第二个字为“<?php echo $wordArr[1];?>”的成语</h3>
 </div>
+<ul class="ui-list ui-list-pure ui-border-tb">
+    <?php foreach($relatedWords['secondWord'] as $_word){?>
+    <li class="ui-border-t ui-form-item-link" data-href="<?php echo Yii::app()->createUrl('chengyu/view',array('id'=>$_word['id']));?>">
+        <?php echo CHtml::link($_word['title'],array('chengyu/view','id'=>$_word['id']));?>
+    </li>
+    <?php }?>
+</ul>
+<?php }?>
+<?php if(!empty($relatedWords['thirdWord'])){?>
+<div class="mod-header">
+    <h3>第三个字为“<?php echo $wordArr[2];?>”的成语</h3>
+</div>
+<ul class="ui-list ui-list-pure ui-border-tb">
+    <?php foreach($relatedWords['thirdWord'] as $_word){?>
+    <li class="ui-border-t ui-form-item-link" data-href="<?php echo Yii::app()->createUrl('chengyu/view',array('id'=>$_word['id']));?>">
+        <?php echo CHtml::link($_word['title'],array('chengyu/view','id'=>$_word['id']));?>
+    </li>
+    <?php }?>
+</ul>
+<?php }?>
+<?php if(!empty($relatedWords['fourthWord'])){?>
+<div class="mod-header">
+    <h3>第四个字为“<?php echo $wordArr[3];?>”的成语</h3>
+</div>
+<ul class="ui-list ui-list-pure ui-border-tb">
+    <?php foreach($relatedWords['fourthWord'] as $_word){?>
+    <li class="ui-border-t ui-form-item-link" data-href="<?php echo Yii::app()->createUrl('chengyu/view',array('id'=>$_word['id']));?>">
+        <?php echo CHtml::link($_word['title'],array('chengyu/view','id'=>$_word['id']));?>
+    </li>
+    <?php }?>
+</ul>
+<?php }?>
 <?php }?>

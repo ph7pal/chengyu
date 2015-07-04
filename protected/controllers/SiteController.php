@@ -2,15 +2,6 @@
 
 class SiteController extends Q {
 
-    public $layout = '';
-    public $newMembers = array();
-    public $loginTitle = '';
-    public $regTitle = '';
-
-    public function init() {
-        parent::init();
-    }
-
     public function actions() {
         $cookieInfo = zmf::getCookie('checkWithCaptcha');
         if ($cookieInfo == '1') {
@@ -34,6 +25,9 @@ class SiteController extends Q {
      * This is the action to handle external exceptions.
      */
     public function actionError() {
+        if ($this->isMobile != 'yes') {
+            $this->layout = 'common';
+        }
         if ($error = Yii::app()->errorHandler->error) {
             if (Yii::app()->request->isAjaxRequest)
                 echo $error['message'];
@@ -70,14 +64,14 @@ class SiteController extends Q {
                     if ($this->referer == '') {
                         $this->referer = array('chengyu/index');
                     }
-                    zmf::delCookie('checkWithCaptcha');                    
+                    zmf::delCookie('checkWithCaptcha');
                     $this->redirect($this->referer);
                 }
             } else {
                 zmf::setCookie('checkWithCaptcha', 1, 86400);
             }
         }
-        $this->pageTitle =  '登录 - ' . zmf::config('sitename');        
+        $this->pageTitle = '登录 - ' . zmf::config('sitename');
         $this->render('login', array(
             'model' => $model,
         ));

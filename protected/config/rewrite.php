@@ -12,6 +12,7 @@ return array(
         'dict' => 'chengyu/index',
         'detail/<id:\d+>' => 'chengyu/view',
         'story-<page:\d+>' => 'chengyu/story',
+        'siteinfo/<code:\w+>' => 'siteinfo/view',
         '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
         '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
     )

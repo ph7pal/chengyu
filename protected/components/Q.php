@@ -15,6 +15,8 @@ class Q extends T {
     public $searchKeywords; //搜索词    
     public $wholeNotice = ''; //全站通知，导航条顶部
     public $asideRecommend=array();//边侧推荐
+    public $mobileTitle;//手机端导航条显示的名称
+    public $canonical;//当前页面的链接
 
     function init() {
         parent::init();
@@ -31,6 +33,7 @@ class Q extends T {
         }
         $this->pageTitle=zmf::config('sitename');
         self::_referer();
+        $this->mobileTitle=zmf::config('sitename');
     }
 
     function _referer() {

@@ -10,7 +10,7 @@ class IndexController extends Q {
             'new' => $new,
             'contens' => $contens,
             'xinjie' => $xinjie,
-        );
+        );        
         $this->render('index',$data);
     }
 

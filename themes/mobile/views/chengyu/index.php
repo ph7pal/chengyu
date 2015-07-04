@@ -16,12 +16,12 @@ $this->breadcrumbs=array(
             </p>
         </div>
     </div>
-        <div class="ui-form ui-border-t">
+        <ul class="ui-list ui-list-pure ui-border-tb">
         <?php foreach($posts as $post){?>
-            <div class="ui-form-item ui-form-item-link ui-border-b">
+            <li class="ui-border-t ui-form-item-link" data-href="<?php echo Yii::app()->createUrl('chengyu/view',array('id'=>$post['id']));?>">
                 <?php echo CHtml::link($post['title'],array('chengyu/view','id'=>$post['id']),array('class'=>'col-list-item','title'=>$post['title']));?> 
-            </div>
+            </li>
         <?php }?>
-        </div>        
+        </ul>        
         <?php $this->renderPartial('/common/pager', array('pages' => $pages)); ?>
 </div>

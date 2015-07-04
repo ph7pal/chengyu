@@ -24,7 +24,20 @@ class PostController extends AppApi {
     }
 
     public function actionStory() {
-        $sql = "SELECT c.id,c.title,c.fayin,cc.content FROM {{chengyu}} c,{{chengyu_content}} cc WHERE cc.classify='" . ChengyuContent::CLASSIFY_GUSHI . "' AND cc.cid=c.id AND cc.status=" . Posts::STATUS_PASSED . " ORDER BY cc.cTime DESC";
+        $filter=  $this->getValue('filter', 0, 2);
+        $order=  $this->getValue('order', 0, 2);        
+        $where=$orderBy='';
+        if($filter==1){
+            $where=" AND type='".ChengyuContent::TYPE_ZC."'";
+        }elseif($filter==2){
+            $where=" AND type='".ChengyuContent::TYPE_WL."'";
+        }
+        if($order==2){
+            $orderBy='c.hits';
+        }else{
+            $orderBy='cc.cTime';
+        }
+        $sql = "SELECT c.id,c.title,c.fayin,cc.content FROM {{chengyu}} c,{{chengyu_content}} cc WHERE cc.classify='" . ChengyuContent::CLASSIFY_GUSHI . "' {$where} AND cc.cid=c.id AND cc.status=" . Posts::STATUS_PASSED . " ORDER BY {$orderBy} DESC";
         $this->getByPage(array('sql' => $sql), $pages, $posts);
         if (!empty($posts)) {
             foreach ($posts as $k => $v) {
@@ -53,23 +66,27 @@ class PostController extends AppApi {
         $fanyiis = $detail->fanYiCis;
         $guShis = $detail->guShis;
         if (!empty($jies)) {
-            foreach ($jies as $_jies) {
-                $jieshi[]['content'] = $_jies['content'];
+            foreach ($jies as $k=>$_jies) {
+                $jieshi[$k]['content'] = $_jies['content'];
+                $jieshi[$k]['type'] = $_jies['type'];
             }
         }
         if (!empty($chuChus)) {
-            foreach ($chuChus as $_chuChu) {
-                $chuchu[]['content'] = $_chuChu['content'];
+            foreach ($chuChus as $k=>$_chuChu) {
+                $chuchu[$k]['content'] = $_chuChu['content'];
+                $chuchu[$k]['type'] = $_chuChu['type'];
             }
         }
         if (!empty($liJus)) {
-            foreach ($liJus as $_liJu) {
-                $liju[]['content'] = $_liJu['content'];
+            foreach ($liJus as $k=>$_liJu) {
+                $liju[$k]['content'] = $_liJu['content'];
+                $liju[$k]['type'] = $_liJu['type'];
             }
         }
         if (!empty($guShis)) {
-            foreach ($guShis as $_guShi) {
-                $gushi[]['content'] = $_guShi['content'];
+            foreach ($guShis as $k=>$_guShi) {
+                $gushi[$k]['content'] = $_guShi['content'];
+                $gushi[$k]['type'] = $_guShi['type'];
             }
         }
         if (!empty($tongyis)) {
@@ -85,6 +102,8 @@ class PostController extends AppApi {
             }
         }
         $relatedWords = Chengyu::getRelatedWords($detail->title, $id);
+        $wordArr=zmf::chararray($detail['title']);
+        $wordArr=$wordArr[0];
         $data = array(
             'id' => $id,
             'title' => $detail->title,
@@ -98,6 +117,7 @@ class PostController extends AppApi {
             'fanyici' => $fanyici,
             'gushi' => $gushi,
             'relatedWords' => $relatedWords,
+            'wordArr' => $wordArr,
         );
         $this->output($data, $this->succCode);
     }
@@ -116,7 +136,7 @@ class PostController extends AppApi {
                 $conditionArr[] = " (title LIKE '%{$char}%') ";
             }
             $conStr = join('AND', $conditionArr);            
-            $sql = "SELECT id,title FROM {{chengyu}} WHERE ({$conStr}) AND `status`=" . Posts::STATUS_PASSED;
+            $sql = "SELECT id,title,fayin FROM {{chengyu}} WHERE ({$conStr}) AND `status`=" . Posts::STATUS_PASSED;
             $this->getByPage(array('sql'=>$sql), $pages, $posts);
             if($this->page==1){
                 SearchRecords::checkAndUpdate($keyword);

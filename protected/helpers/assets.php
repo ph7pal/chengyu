@@ -56,14 +56,14 @@ class assets {
 //            $cs->registerCssFile($staticUrl . 'common/css/font-awesome.min.css');
 //            $cs->registerCssFile($staticUrl . 'common/css/font-awesome-ie7.min.css');
             $cs->registerCssFile($staticUrl . 'common/css/newsoul.css');
-            if (in_array(Yii::app()->getController()->id, array('siteinfo','chengyu')) && in_array(Yii::app()->getController()->getAction()->id, array('create','update'))) {
+            if (in_array(Yii::app()->getController()->id, array('siteinfo','chengyu')) && in_array(Yii::app()->getController()->getAction()->id, array('create','update','content'))) {
                 $cs->registerCoreScript('jquery');
                 $cs->registerScriptFile($staticUrl . "common/js/zmf.js", CClientScript::POS_END);
             }
         }elseif($type=='mobile'){
             $cs->registerCssFile($staticUrl . 'common/css/frozen.css');
             $cs->registerCssFile($staticUrl . 'common/css/mobile.css');
-            $cs->registerScriptFile($staticUrl . "common/js/zepto.min.js", CClientScript::POS_END);
+            $cs->registerScriptFile($staticUrl . "common/js/zepto.min.js", CClientScript::POS_HEAD);
             $cs->registerScriptFile($staticUrl . "common/js/frozen.js", CClientScript::POS_END);
         }
     }

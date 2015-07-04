@@ -14,8 +14,8 @@ class AppApi extends Controller {
     public $hash; //随机生成的串
     public $usercode; //给用户的安全串
     public $userInfo;
-    public $iosKey = '1b90aa0901a46c8dcb5ff3b9';
-    public $androidKey = '1391bd2414a06e928302a4cc9cceddf9';
+    public $iosKey = 'AW0oQ9nMyqmF9erP';
+    public $androidKey = '83nlir0NbKwfDaii';
     public $pageSize;
     public $page;
     public $emptyarr;

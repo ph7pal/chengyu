@@ -1,5 +1,6 @@
 body{
-    padding-top: 120px;
+    padding-top: 45px;
+    background: #f2f2f2
 }
 h2{
     font-size: 18px;
@@ -11,31 +12,140 @@ h2{
     padding: 15px;
     font-weight: bold
 }
-.item-title{
-    padding: 15px 0
-}
-.zmf-table td, .zmf-table th {
-  font-size: 12px;
-}
 .wrap-container{
     background: #FFF;
     margin-bottom: 15px;
     padding-bottom: 10px;
+    box-shadow: 2px 2px 4px #ededed;
+    -moz-box-shadow: 2px 2px 2px #ededed;
+    -webkit-box-shadow: 2px 2px 4px #ededed;
+    border-bottom: 1px solid #CCC;
+    border-top: 1px solid #CCC;
 }
 .wrap-container .wrap-content{
     padding:0 15px;
+
 }
 .wrap-container .wrap-content img{
     max-width: 100%;
-height: auto;
+    height: auto;
 }
 .wrap-content h1{
     font-size: 20px;
     font-weight: bold;
     color: #494949;
 }
+/*详细页面*/
+.item-title{
+    padding: 15px 0
+}
+.zmf-table td, .zmf-table th {
+    font-size: 12px;
+}
+/*详细页面同义词*/
+.breadwords>a{display:inline-block;}
+.breadwords>a+a:before{content:"/\00a0";padding:0 5px;color:#ccc}
+.breadwords>a:hover{text-decoration: none}
 .text-indent{
     text-indent: 2em
+}
+.color-grey{color: #CCC}
+.pull-left{float:left}
+.pull-right{float:right}
+.clearfix{clear: both}
+/*导航条上的展开按钮*/
+.header-right {
+    display: block;
+    position: absolute;
+    top: -12px;
+    right: 0;
+    width: 55px;
+    height: 45px;
+}
+.header-right ul {
+    width: 27px;
+    margin: 0 auto;
+}
+.header-right li {
+    height: 9px;
+}
+
+.header-right li span, .header-right li:before {
+    display: inline-block;
+    background: #fff;
+    height: 3px;
+}
+.header-right li:before {
+    content: "";
+    width: 4px;
+    margin-right: 5px;
+}
+.header-right li span {
+    width: 18px;
+}
+.header-select-holder{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 45px;
+    z-index: 999;
+    display: none;
+    background: #333;
+    overflow: hidden
+}
+/*故事列表*/
+.filterBar{
+    height: 40px;padding: 5px;clear: both;line-height: 36px;
+}
+/*footer*/
+footer{
+    text-align: center;
+    margin: 10px 0;
+}
+.ft_fix li {
+    display: inline-block;
+    padding: 0 10px;
+    margin: 0;
+    font-size: 14px;
+    line-height: 14px;
+    border-right: 1px solid #a5a5a5;
+}
+.ft_fix li:last-child {
+    border-right-width: 0;
+    margin-left: -3px;
+}
+#copyright {
+    position: relative;
+    text-align: center;
+    width: 100%;
+    font-size: 12px;
+    color: #999;
+    height: 30px;
+}
+#copyright:before {
+    display: block;
+    content: "";
+    background-image: -webkit-gradient(radial,center center,0,center center,460,from(#333),to(#efefef));
+    background-image: -webkit-radial-gradient(circle,#333,#efefef);
+    background-image: -moz-radial-gradient(circle,#333,#efefef);
+    background-image: radial-gradient(circle,#333,#efefef);
+    background-repeat: no-repeat;
+    height: 1px;
+    overflow: hidden;
+    margin-top: 12px;
+}
+#copyright .copyright_text {
+    line-height: 23px;
+    background: #f2f2f2;
+    position: absolute;
+    padding: 0 6px;
+    top: -11px;
+    left: 50%;
+    margin-left: -106px;
+}
+.copyright_text a {
+    margin-left: 8px;
+    color: #a9a9a9;
 }
 /**
 *重写分页样式
@@ -44,37 +154,37 @@ height: auto;
     margin-top:15px;
 }
 ul.yiiPager{
-	height:26px;
-	margin:0 15px;
-	padding:0
+    height:26px;
+    margin:0 15px;
+    padding:0
 }
 ul.yiiPager li{
-	display:inline;
-	margin:0 4px 0 0
+    display:inline;
+    margin:0 4px 0 0
 }
 ul.yiiPager a:link,ul.yiiPager a:visited{
-	padding:5px 9px;
-	border:1px solid #ccc;
-	border-radius:3px;
-	background:#fff;
-	color:#777;
-	font-weight:normal
+    padding:5px 9px;
+    border:1px solid #ccc;
+    border-radius:3px;
+    background:#fff;
+    color:#777;
+    font-weight:normal
 }
 ul.yiiPager a:hover{
-	border-color:#035d67;
-	box-shadow:1px 1px 1px #333;
-	color:#035d67;
-	text-decoration:none
+    border-color:#035d67;
+    box-shadow:1px 1px 1px #333;
+    color:#035d67;
+    text-decoration:none
 }
 ul.yiiPager .selected a{
-	padding:6px 10px;
-	border:0;
-	border-radius:3px;
-	background:#035d67;
-	color:#fff
+    padding:6px 10px;
+    border:0;
+    border-radius:3px;
+    background:#035d67;
+    color:#fff
 }
 ul.yiiPager .hidden,ul.yiiPager .first,ul.yiiPager .last{
-	display:none
+    display:none
 }
 ul.yiiPager .previous{
     float:left;

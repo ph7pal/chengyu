@@ -1,6 +1,15 @@
 <?php
 
 class ChengyuController extends Q {
+    
+    private function check(){
+        if (!$this->uid) {
+            $this->redirect(array('site/login'));
+        }
+        if($this->isMobile=='yes'){
+            $this->redirect(zmf::config('baseurl'));
+        }
+    }
 
     public function actionIndex() {
         $criteria = new CDbCriteria();
@@ -14,6 +23,8 @@ class ChengyuController extends Q {
         $pager->pageSize = 30;
         $pager->applyLimit($criteria);
         $posts = Chengyu::model()->findAll($criteria);
+        $this->mobileTitle='成语大全';
+        $this->canonical=zmf::config('domain').  Yii::app()->createUrl('chengyu/index');
         $this->render('index', array(
             'pages' => $pager,
             'posts' => $posts,
@@ -42,6 +53,8 @@ class ChengyuController extends Q {
             }
         }
         $this->pageTitle='成语故事 - '.zmf::config('sitename');
+        $this->mobileTitle='成语故事';
+        $this->canonical=zmf::config('domain').  Yii::app()->createUrl('chengyu/story');
         $data = array(
             'posts' => $posts,
             'pages' => $pages,
@@ -61,6 +74,8 @@ class ChengyuController extends Q {
         $wordArr=$wordArr[0];
         $this->pageTitle = $info['title'] . ' - ' . zmf::config('sitename');
         $this->pageDescription = $info['title'] . '的解释、' . $info['title'] . '英文翻译、' . $info['title'] . '的故事、' . $info['title'] . '的成语新解';
+        $this->mobileTitle=$info['title'];
+        $this->canonical=zmf::config('domain').  Yii::app()->createUrl('chengyu/view',array('id'=>$id));
         $this->render('view', array(
             'model' => $info,
             'wordArr' => $wordArr,
@@ -98,6 +113,8 @@ class ChengyuController extends Q {
         } else {
             $this->pageTitle = '成语解释_成语英文翻译_成语故事 - ' . zmf::config('sitename');
         }
+        $this->mobileTitle='搜索';
+        $this->canonical=zmf::config('domain').  Yii::app()->createUrl('chengyu/search');
         $this->render('search', $data);
     }
     
@@ -106,9 +123,7 @@ class ChengyuController extends Q {
      * @param type $id
      */
     public function actionCreate($id = '') {
-        if (!$this->uid) {
-            $this->redirect(array('site/login'));
-        }
+        $this->check();
         if ($id) {
             $model = $this->loadModel($id);
         } else {
@@ -137,9 +152,7 @@ class ChengyuController extends Q {
      * 为成语添加同义词、反义词
      */
     public function actionCi($id) {
-        if (!$this->uid) {
-            $this->redirect(array('site/login'));
-        }
+        $this->check();
         $info = $this->loadModel($id);
         $type = tools::val('type', 't', 1);
         if ($type == 'tongyi') {
@@ -161,9 +174,7 @@ class ChengyuController extends Q {
      * @throws CHttpException
      */
     public function actionContent($id) {
-        if (!$this->uid) {
-            $this->redirect(array('site/login'));
-        }
+        $this->check();
         $id = zmf::filterInput($id); //所属成语的id
         $cid = tools::val('ccid'); //内容id，chengyu's content id
         $info = $this->loadModel($id);
@@ -223,9 +234,7 @@ class ChengyuController extends Q {
      * @throws CHttpException
      */
     public function actionDelcontent($id) {
-        if (!$this->uid) {
-            $this->redirect(array('site/login'));
-        }
+        $this->check();
         $id = zmf::filterInput($id);
         $model = ChengyuContent::model()->findByPk($id);
         if ($model === null) {
@@ -240,9 +249,7 @@ class ChengyuController extends Q {
      * @param type $id
      */
     public function actionDelete($id) {
-        if (!$this->uid) {
-            $this->redirect(array('site/login'));
-        }
+        $this->check();
         $info=$this->loadModel($id);
         if(!$info){
             $this->message(0, '页面不存在');
