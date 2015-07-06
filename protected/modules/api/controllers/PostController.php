@@ -18,24 +18,24 @@ class PostController extends AppApi {
         $this->getByPage(array('sql' => $sql), $pages, $posts);
         $data = array(
             'posts' => $posts,
-            'loadMore'=>($pages->itemCount > ($this->page*$this->pageSize)) ? 1 :0,
+            'loadMore' => ($pages->itemCount > ($this->page * $this->pageSize)) ? 1 : 0,
         );
         $this->jsonOutPut(1, $data);
     }
 
     public function actionStory() {
-        $filter=  $this->getValue('filter', 0, 2);
-        $order=  $this->getValue('order', 0, 2);        
-        $where=$orderBy='';
-        if($filter==1){
-            $where=" AND type='".ChengyuContent::TYPE_ZC."'";
-        }elseif($filter==2){
-            $where=" AND type='".ChengyuContent::TYPE_WL."'";
+        $filter = $this->getValue('filter', 0, 2);
+        $order = $this->getValue('order', 0, 2);
+        $where = $orderBy = '';
+        if ($filter == 1) {
+            $where = " AND type='" . ChengyuContent::TYPE_ZC . "'";
+        } elseif ($filter == 2) {
+            $where = " AND type='" . ChengyuContent::TYPE_WL . "'";
         }
-        if($order==2){
-            $orderBy='c.hits';
-        }else{
-            $orderBy='cc.cTime';
+        if ($order == 2) {
+            $orderBy = 'c.hits';
+        } else {
+            $orderBy = 'cc.cTime';
         }
         $sql = "SELECT c.id,c.title,c.fayin,cc.content FROM {{chengyu}} c,{{chengyu_content}} cc WHERE cc.classify='" . ChengyuContent::CLASSIFY_GUSHI . "' {$where} AND cc.cid=c.id AND cc.status=" . Posts::STATUS_PASSED . " ORDER BY {$orderBy} DESC";
         $this->getByPage(array('sql' => $sql), $pages, $posts);
@@ -47,7 +47,7 @@ class PostController extends AppApi {
         }
         $data = array(
             'posts' => $posts,
-            'loadMore'=>($pages->itemCount > ($this->page*$this->pageSize)) ? 1 :0,
+            'loadMore' => ($pages->itemCount > ($this->page * $this->pageSize)) ? 1 : 0,
         );
         $this->output($data, $this->succCode);
     }
@@ -66,25 +66,25 @@ class PostController extends AppApi {
         $fanyiis = $detail->fanYiCis;
         $guShis = $detail->guShis;
         if (!empty($jies)) {
-            foreach ($jies as $k=>$_jies) {
+            foreach ($jies as $k => $_jies) {
                 $jieshi[$k]['content'] = $_jies['content'];
                 $jieshi[$k]['type'] = $_jies['type'];
             }
         }
         if (!empty($chuChus)) {
-            foreach ($chuChus as $k=>$_chuChu) {
+            foreach ($chuChus as $k => $_chuChu) {
                 $chuchu[$k]['content'] = $_chuChu['content'];
                 $chuchu[$k]['type'] = $_chuChu['type'];
             }
         }
         if (!empty($liJus)) {
-            foreach ($liJus as $k=>$_liJu) {
+            foreach ($liJus as $k => $_liJu) {
                 $liju[$k]['content'] = $_liJu['content'];
                 $liju[$k]['type'] = $_liJu['type'];
             }
         }
         if (!empty($guShis)) {
-            foreach ($guShis as $k=>$_guShi) {
+            foreach ($guShis as $k => $_guShi) {
                 $gushi[$k]['content'] = $_guShi['content'];
                 $gushi[$k]['type'] = $_guShi['type'];
             }
@@ -102,8 +102,8 @@ class PostController extends AppApi {
             }
         }
         $relatedWords = Chengyu::getRelatedWords($detail->title, $id);
-        $wordArr=zmf::chararray($detail['title']);
-        $wordArr=$wordArr[0];
+        $wordArr = zmf::chararray($detail['title']);
+        $wordArr = $wordArr[0];
         $data = array(
             'id' => $id,
             'title' => $detail->title,
@@ -135,18 +135,57 @@ class PostController extends AppApi {
             foreach ($karr as $char) {
                 $conditionArr[] = " (title LIKE '%{$char}%') ";
             }
-            $conStr = join('AND', $conditionArr);            
+            $conStr = join('AND', $conditionArr);
             $sql = "SELECT id,title,fayin FROM {{chengyu}} WHERE ({$conStr}) AND `status`=" . Posts::STATUS_PASSED;
-            $this->getByPage(array('sql'=>$sql), $pages, $posts);
-            if($this->page==1){
+            $this->getByPage(array('sql' => $sql), $pages, $posts);
+            if ($this->page == 1) {
                 SearchRecords::checkAndUpdate($keyword);
             }
         }
-        $data=array(
-            'posts'=>$posts,
-            'loadMore'=>($pages->itemCount > ($this->page*$this->pageSize)) ? 1 :0,
+        $data = array(
+            'posts' => $posts,
+            'loadMore' => ($pages->itemCount > ($this->page * $this->pageSize)) ? 1 : 0,
         );
         $this->output($data, $this->succCode);
+    }
+
+    /**
+     * 同步所有成语
+     */
+    public function actionSyncall() {
+        $sql = "SELECT id, title, title_tw, pinyin, firstChar, yufa, cTime FROM {{chengyu}} WHERE cTime>='{$this->tableVersion}' AND `status`=" . Posts::STATUS_PASSED . ' ORDER BY cTime DESC';
+        $this->getByPage(array('sql' => $sql), $pages, $posts);
+        $data = array(
+            'posts' => $posts,
+            'loadMore' => ($pages->itemCount > ($this->page * $this->pageSize)) ? 1 : 0,
+        );
+        $this->jsonOutPut(1, $data);
+    }
+
+    /**
+     * 同步所有内容，包括故事、例句等
+     */
+    public function actionSynccontent() {
+        $sql = "SELECT * FROM {{chengyu_content}} WHERE cTime>='{$this->tableVersion}' AND `status`=" . Posts::STATUS_PASSED . ' ORDER BY cTime DESC';
+        $this->getByPage(array('sql' => $sql), $pages, $posts);
+        $data = array(
+            'posts' => $posts,
+            'loadMore' => ($pages->itemCount > ($this->page * $this->pageSize)) ? 1 : 0,
+        );
+        $this->jsonOutPut(1, $data);
+    }
+
+    /**
+     * 同步所有同义词关系
+     */
+    public function actionSyncrelation() {
+        $sql = "SELECT * FROM {{chengyu_ci}} WHERE cTime>='{$this->tableVersion}' AND `status`=" . Posts::STATUS_PASSED . ' ORDER BY cTime DESC';
+        $this->getByPage(array('sql' => $sql), $pages, $posts);
+        $data = array(
+            'posts' => $posts,
+            'loadMore' => ($pages->itemCount > ($this->page * $this->pageSize)) ? 1 : 0,
+        );
+        $this->jsonOutPut(1, $data);
     }
 
 }

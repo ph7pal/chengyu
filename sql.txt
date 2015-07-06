@@ -50,3 +50,5 @@ alter table pre_chengyu add firstWord char(1) not null,add secondWord char(1) no
 update pre_chengyu set firstWord=SUBSTR(title FROM 1 FOR 1);
 update pre_chengyu set secondWord=SUBSTR(title FROM 2 FOR 1),thirdWord=SUBSTR(title FROM 3 FOR 1),fourthWord=SUBSTR(title FROM 4 FOR 1),lastWord=SUBSTR(title FROM -1 FOR 1);
 alter table pre_chengyu_content add type tinyint(1) UNSIGNED not null DEFAULT 1;
+
+alter table pre_chengyu_ci add cTime int(10) UNSIGNED not null;

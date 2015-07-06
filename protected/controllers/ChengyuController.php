@@ -14,6 +14,7 @@ class ChengyuController extends Q {
     public function actionIndex() {
         $criteria = new CDbCriteria();
         $criteria->order = 'hits DESC';
+        $criteria->condition='status='.Posts::STATUS_PASSED;
         $char = tools::val('char', 't', 1);
         if ($char) {
             $criteria->addCondition("firstChar='{$char}'");

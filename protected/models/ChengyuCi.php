@@ -30,7 +30,8 @@ class ChengyuCi extends CActiveRecord {
         return array(
             array('cid, tocid, classify', 'required'),
             array('classify', 'numerical', 'integerOnly' => true),
-            array('cid, tocid', 'length', 'max' => 10),
+            array('cTime', 'default', 'setOnEmpty' => true, 'value' => zmf::now()),
+            array('cid, tocid,cTime', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('id, cid, tocid, classify', 'safe', 'on' => 'search'),
@@ -57,6 +58,7 @@ class ChengyuCi extends CActiveRecord {
             'cid' => '成语ID',
             'tocid' => '关联的成语ID',
             'classify' => '类型：反义词、同义词',
+            'cTime' => '创建时间',//主要用于版本控制
         );
     }
 

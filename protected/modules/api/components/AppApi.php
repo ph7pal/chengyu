@@ -11,7 +11,7 @@ class AppApi extends Controller {
     public $tipsCode = 2; //提示代码    
     //必填参数
     public $version; //获取软件版本号
-    public $hash; //随机生成的串
+    public $time; //请求时客户端的时间戳
     public $usercode; //给用户的安全串
     public $userInfo;
     public $iosKey = 'AW0oQ9nMyqmF9erP';
@@ -43,10 +43,10 @@ class AppApi extends Controller {
 
     public function checkApp() {
         $code = tools::val('appcode', 1);
-        $hash = tools::val('hash', 1);
+        $time = tools::val('time', 1);
         $version = tools::val('version', 1);
         $platform = strtolower(tools::val('platform', 1));
-        if (!$code || !$hash || !$platform || !$version) {
+        if (!$code || !$time || !$platform || !$version) {
             self::output(self::getErrorInfo('notInService'), 403);
         }
         if ($platform == 'ios') {
@@ -58,7 +58,7 @@ class AppApi extends Controller {
         }
         $this->appCode = $_code;
         $this->version = $version;
-        if (md5($hash . $_code) != $code) {
+        if (md5($time . $_code) != $code) {
             self::output(self::getErrorInfo('dataIncorrect'),403);
         }
     }
