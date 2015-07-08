@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /ajax
+Disallow: /site
+
+# Sitemap files
+Sitemap: http://ciyuxinjie.org/attachments/sitemap/indexer.xml
