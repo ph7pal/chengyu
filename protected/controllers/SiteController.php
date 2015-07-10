@@ -111,7 +111,7 @@ class SiteController extends Q {
             }
             $content = <<<SITEMAP
 <?xml version="1.0" encoding="UTF-8"?>\r\n
-<sitemapindex>$str</sitemapindex>\r\n
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">$str</sitemapindex>\r\n
 SITEMAP;
             file_put_contents($dir, $content);
             exit();
@@ -130,7 +130,7 @@ SITEMAP;
                 $dir = $basedir . "sitemap{$page}.xml";
                 $content = <<<SITEMAP
 <?xml version='1.0' encoding='UTF-8'?>\r\n
-<urlset>{$str}</urlset>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{$str}</urlset>
 SITEMAP;
                 file_put_contents($dir, $content);
                 $this->message(1, "正在处理{$page}页", Yii::app()->createUrl('site/sitemap', array('a' => 'create', 'page' => ($page + 1))));

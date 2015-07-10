@@ -223,5 +223,24 @@ class CaijiController extends Q {
         $url = Yii::app()->createUrl('caiji/ci', array('page' => ($page + 1)));
         $this->message(1, "正在处理第{$page}页", $url, 1);
     }
+    
+    public function actionSame(){
+        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+        $num = 100;        
+        $total=  Chengyu::model()->count();        
+        $start = ($page - 1) * $num+$total/2;
+        $sql="SELECT id,title FROM {{chengyu}} ORDER BY id ASC LIMIT {$start},$num";
+        $items=  Yii::app()->db->createCommand($sql)->queryAll();
+        if(empty($items)){
+            exit('well done');
+        }
+        foreach($items as $v){
+            $_info=  Chengyu::model()->find("title='{$v['title']}' AND id!={$v['id']}");
+            if($_info){
+                file_put_contents(Yii::app()->basePath.'/runtime/same.txt', $v['id'].','.$_info['id'].',',FILE_APPEND);
+            }
+        }
+        $this->message(1, '正在处理', Yii::app()->createUrl('caiji/same',array('page'=>($page+1))), 1);
+    }
 
 }
