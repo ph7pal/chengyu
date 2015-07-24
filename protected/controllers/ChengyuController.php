@@ -81,7 +81,6 @@ class ChengyuController extends Q {
             $guShis = $info->guShis;
             $data = array(
                 'model' => $info,
-                'wordArr' => $wordArr,
                 'relatedWords' => $relatedWords,
                 'tongyis' => $tongyis,
                 'fanyiis' => $fanyiis,
@@ -100,7 +99,7 @@ class ChengyuController extends Q {
         Posts::updateCount($id, 'Chengyu');
         $wordArr = zmf::chararray($info['title']);
         $wordArr = $wordArr[0];
-        $data['']=$wordArr;
+        $data['wordArr']=$wordArr;
         $this->pageTitle = $info['title'] . ' - ' . zmf::config('sitename');
         $this->keywords=$info['title'] . '解释、' .$info['title'] . '出处、' . $info['title'] . '英文翻译、' . $info['title'] . '故事、' . $info['title'] . '成语新解';
         $this->pageDescription = $info['title'] . "（{$info['fayin']}）" . (!empty($jies) ? '的解释【'.$jies[0]['content'].'】':''). (!empty($chuChus) ? "；{$info['title']}的出处【".$chuChus[0]['content'].'】':'');
