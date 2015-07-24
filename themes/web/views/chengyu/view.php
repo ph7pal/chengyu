@@ -17,27 +17,25 @@ $this->menu = array(
     array('label' => '添加故事', 'url' => array('content', 'id' => $model->id, 'type' => 'gushi')),
     array('label' => '删除', 'url' => array('delete', 'id' => $model->id)),
 );
-$tongyis=$model->tongYiCis;
-$fanyiis=$model->fanYiCis;
 ?>
 <h1 class="item-title"><?php echo $model->title;?></h1>
 <table class="table table-striped">
     <?php if($model->fayin!=''){?><tr><td>发音：</td><td><?php echo $model->fayin;?></td></tr><?php }?>
     <?php if($model->title_tw!=''){?><tr><td style="width: 80px">繁体：</td><td><?php echo $model->title_tw;?></td></tr><?php }?>
     <?php if($model->yufa!=''){?><tr><td>语法：</td><td><?php echo $model->yufa;?></td></tr><?php }?>
-    <?php $jies=$model->jieShis;$_total=count($jies);if(!empty($jies)){foreach($jies as $k=>$jieshi){?>  
+    <?php if(!empty($jies)){$_total=count($jies);foreach($jies as $k=>$jieshi){?>  
     <tr><td><?php echo $k==0 ? '解释：' : '&nbsp;';?></td><td><?php echo ($_total >1 ? (($k+1).'、'):'').($jieshi['type']==ChengyuContent::TYPE_WL ? '<span class="badge">新解</span>':'').$jieshi['content'];if($this->uid){echo CHtml::link('编辑',array('chengyu/content','id'=>$model->id,'ccid'=>$jieshi['id'])).'&nbsp;'.CHtml::link('删除',array('chengyu/delcontent','id'=>$jieshi['id']));}?></td></tr>
     <?php }}?>
-    <?php $chuChus=$model->chuChus;$_total=count($chuChus);if(!empty($chuChus)){foreach($chuChus as $k=>$chuChu){?>  
+    <?php if(!empty($chuChus)){$_total=count($chuChus);foreach($chuChus as $k=>$chuChu){?>  
     <tr><td><?php echo $k==0 ? '出处：' : '&nbsp;';?></td><td><?php echo ($_total >1 ? (($k+1).'、'):'').($chuChu['type']==ChengyuContent::TYPE_WL ? '<span class="badge">新解</span>':'').$chuChu['content'];if($this->uid){echo CHtml::link('编辑',array('chengyu/content','id'=>$model->id,'ccid'=>$chuChu['id'])).'&nbsp;'.CHtml::link('删除',array('chengyu/delcontent','id'=>$chuChu['id']));}?></td></tr>
     <?php }}?>
-    <?php $liJus=$model->liJus;$_total=count($liJus);if(!empty($liJus)){foreach($liJus as $k=>$liJu){?>  
+    <?php if(!empty($liJus)){$_total=count($liJus);foreach($liJus as $k=>$liJu){?>  
     <tr><td><?php echo $k==0 ? '例句：' : '&nbsp;';?></td><td><?php echo ($_total >1 ? (($k+1).'、'):'').($liJu['type']==ChengyuContent::TYPE_WL ? '<span class="badge">新解</span>':'').$liJu['content'];if($this->uid){echo CHtml::link('编辑',array('chengyu/content','id'=>$model->id,'ccid'=>$liJu['id'])).'&nbsp;'.CHtml::link('删除',array('chengyu/delcontent','id'=>$liJu['id']));}?></td></tr>
     <?php }}?>
     <?php if(!empty($tongyis)){?><tr><td>同义词：</td><td class="breadwords"><?php foreach($tongyis as $tongyi){$_ciInfo=$tongyi->chengyuInfo;echo CHtml::link($_ciInfo['title'],array('chengyu/view','id'=>$_ciInfo['id']));}?></td></tr><?php }?>
     <?php if(!empty($fanyiis)){?><tr><td>反义词：</td><td  class="breadwords"><?php foreach($fanyiis as $fanyii){$_ciInfo=$fanyii->chengyuInfo;echo CHtml::link($_ciInfo['title'],array('chengyu/view','id'=>$_ciInfo['id']));}?></td></tr><?php }?>
 </table>
-<?php if(!empty($model->guShis)){$guShis=$model->guShis;?>
+<?php if(!empty($guShis)){?>
 <h4>“<?php echo $model->title;?>”的故事</h4>
   <?php foreach($guShis as $k=>$guShi){?> 
     <div class="media zmf-border-bottom">

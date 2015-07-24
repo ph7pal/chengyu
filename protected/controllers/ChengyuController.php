@@ -1,12 +1,12 @@
 <?php
 
 class ChengyuController extends Q {
-    
-    private function check(){
+
+    private function check() {
         if (!$this->uid) {
             $this->redirect(array('site/login'));
         }
-        if($this->isMobile=='yes'){
+        if ($this->isMobile == 'yes') {
             $this->redirect(zmf::config('baseurl'));
         }
     }
@@ -14,7 +14,7 @@ class ChengyuController extends Q {
     public function actionIndex() {
         $criteria = new CDbCriteria();
         $criteria->order = 'hits DESC';
-        $criteria->condition='status='.Posts::STATUS_PASSED;
+        $criteria->condition = 'status=' . Posts::STATUS_PASSED;
         $char = tools::val('char', 't', 1);
         if ($char) {
             $criteria->addCondition("firstChar='{$char}'");
@@ -24,27 +24,27 @@ class ChengyuController extends Q {
         $pager->pageSize = 30;
         $pager->applyLimit($criteria);
         $posts = Chengyu::model()->findAll($criteria);
-        $this->mobileTitle='成语大全';
-        $this->canonical=zmf::config('domain').  Yii::app()->createUrl('chengyu/index');
+        $this->mobileTitle = '成语大全';
+        $this->canonical = zmf::config('domain') . Yii::app()->createUrl('chengyu/index');
         $this->render('index', array(
             'pages' => $pager,
             'posts' => $posts,
         ));
     }
-    
+
     public function actionStory() {
-        $filter=  tools::val('filter');
-        $order=  tools::val('order');
-        $where=$orderBy='';
-        if($filter==1){
-            $where=" AND type='".ChengyuContent::TYPE_ZC."'";
-        }elseif($filter==2){
-            $where=" AND type='".ChengyuContent::TYPE_WL."'";
+        $filter = tools::val('filter');
+        $order = tools::val('order');
+        $where = $orderBy = '';
+        if ($filter == 1) {
+            $where = " AND type='" . ChengyuContent::TYPE_ZC . "'";
+        } elseif ($filter == 2) {
+            $where = " AND type='" . ChengyuContent::TYPE_WL . "'";
         }
-        if($order==2){
-            $orderBy='c.hits';
-        }else{
-            $orderBy='cc.cTime';
+        if ($order == 2) {
+            $orderBy = 'c.hits';
+        } else {
+            $orderBy = 'cc.cTime';
         }
         $sql = "SELECT c.id,c.title,c.fayin,cc.content FROM {{chengyu}} c,{{chengyu_content}} cc WHERE cc.classify='" . ChengyuContent::CLASSIFY_GUSHI . "' {$where} AND cc.cid=c.id AND cc.status=" . Posts::STATUS_PASSED . " ORDER BY {$orderBy} DESC";
         Posts::getAll(array('sql' => $sql), $pages, $posts);
@@ -53,36 +53,61 @@ class ChengyuController extends Q {
                 $posts[$k]['content'] = zmf::subStr($v['content'], 280);
             }
         }
-        $this->pageTitle='成语故事 - '.zmf::config('sitename');
-        $this->mobileTitle='成语故事';
-        $this->canonical=zmf::config('domain').  Yii::app()->createUrl('chengyu/story');
+        $this->pageTitle = '成语故事 - ' . zmf::config('sitename');
+        $this->mobileTitle = '成语故事';
+        $this->canonical = zmf::config('domain') . Yii::app()->createUrl('chengyu/story');
         $data = array(
             'posts' => $posts,
             'pages' => $pages,
         );
-        $this->render('story',$data);
+        $this->render('story', $data);
     }
 
     public function actionView($id) {
         $id = zmf::filterInput($id);
-        $info = $this->loadModel($id);
-        if($info['status']!=Posts::STATUS_PASSED){
-            throw new CHttpException(404, 'The requested page does not exist.');
+        $cacheKey = "chengyu-detail-{$id}";
+        $data = zmf::getCache($cacheKey);
+        if (!$data) {
+            $info = $this->loadModel($id);
+            if ($info['status'] != Posts::STATUS_PASSED) {
+                throw new CHttpException(404, 'The requested page does not exist.');
+            }            
+            $relatedWords = Chengyu::getRelatedWords($info['title'], $id);
+            $tongyis = $info->tongYiCis;
+            $fanyiis = $info->fanYiCis;
+            $jies = $info->jieShis;
+            $chuChus = $info->chuChus;
+            $liJus = $info->liJus;
+            $guShis = $info->guShis;
+            $data = array(
+                'model' => $info,
+                'wordArr' => $wordArr,
+                'relatedWords' => $relatedWords,
+                'tongyis' => $tongyis,
+                'fanyiis' => $fanyiis,
+                'jies' => $jies,
+                'chuChus' => $chuChus,
+                'liJus' => $liJus,
+                'guShis' => $guShis,
+            );
+            zmf::setCache($cacheKey, $data,2592000);
+        }else{
+            $info=$data['model'];
+            $jies=$data['jies'];
+            $chuChus=$data['chuChus'];
         }
+        //更新访问次数
         Posts::updateCount($id, 'Chengyu');
-        $relatedWords=  Chengyu::getRelatedWords($info['title'], $id);
-        $wordArr=zmf::chararray($info['title']);
-        $wordArr=$wordArr[0];
+        $wordArr = zmf::chararray($info['title']);
+        $wordArr = $wordArr[0];
+        $data['']=$wordArr;
         $this->pageTitle = $info['title'] . ' - ' . zmf::config('sitename');
-        $this->pageDescription = $info['title'] . '的解释、' . $info['title'] . '英文翻译、' . $info['title'] . '的故事、' . $info['title'] . '的成语新解';
-        $this->mobileTitle=$info['title'];
-        $this->canonical=zmf::config('domain').  Yii::app()->createUrl('chengyu/view',array('id'=>$id));
-        $this->render('view', array(
-            'model' => $info,
-            'wordArr' => $wordArr,
-            'relatedWords' => $relatedWords,
-        ));
-    }    
+        $this->keywords=$info['title'] . '解释、' .$info['title'] . '出处、' . $info['title'] . '英文翻译、' . $info['title'] . '故事、' . $info['title'] . '成语新解';
+        $this->pageDescription = $info['title'] . "（{$info['fayin']}）" . (!empty($jies) ? '的解释【'.$jies[0]['content'].'】':''). (!empty($chuChus) ? "；{$info['title']}的出处【".$chuChus[0]['content'].'】':'');
+        $this->mobileTitle = $info['title'];
+        $this->canonical = zmf::config('domain') . Yii::app()->createUrl('chengyu/view', array('id' => $id));
+        $this->render('view', $data);
+    }
 
     public function actionSearch() {
         $keyword = tools::val('keyword', 't', 1);
@@ -114,11 +139,11 @@ class ChengyuController extends Q {
         } else {
             $this->pageTitle = '成语解释_成语英文翻译_成语故事 - ' . zmf::config('sitename');
         }
-        $this->mobileTitle='搜索';
-        $this->canonical=zmf::config('domain').  Yii::app()->createUrl('chengyu/search');
+        $this->mobileTitle = '搜索';
+        $this->canonical = zmf::config('domain') . Yii::app()->createUrl('chengyu/search');
         $this->render('search', $data);
     }
-    
+
     /**
      * 新增成语
      * @param type $id
@@ -133,6 +158,9 @@ class ChengyuController extends Q {
         if (isset($_POST['Chengyu'])) {
             $model->attributes = $_POST['Chengyu'];
             if ($model->save()) {
+                if($id){
+                    zmf::delCache("chengyu-detail-{$id}");
+                }
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }
@@ -217,6 +245,7 @@ class ChengyuController extends Q {
             }
             $model->attributes = $_POST['ChengyuContent'];
             if ($model->save()) {
+                zmf::delCache("chengyu-detail-{$id}");
                 $this->redirect(array('view', 'id' => $model->cid));
             }
         }
@@ -242,6 +271,7 @@ class ChengyuController extends Q {
             throw new CHttpException(404, 'The requested page does not exist.');
         }
         $model->updateByPk($id, array('status' => Posts::STATUS_DELED));
+        zmf::delCache("chengyu-detail-{$id}");
         $this->redirect(array('chengyu/view', 'id' => $model->cid));
     }
 
@@ -251,11 +281,12 @@ class ChengyuController extends Q {
      */
     public function actionDelete($id) {
         $this->check();
-        $info=$this->loadModel($id);
-        if(!$info){
+        $info = $this->loadModel($id);
+        if (!$info) {
             $this->message(0, '页面不存在');
         }
-        Chengyu::model()->updateByPk($id, array('status'=>  Posts::STATUS_DELED));
+        Chengyu::model()->updateByPk($id, array('status' => Posts::STATUS_DELED));
+        zmf::delCache("chengyu-detail-{$id}");
         $this->redirect(array('chengyu/index'));
     }
 

@@ -16,33 +16,20 @@ class assets {
      */
     public function jsConfig($type = 'web', $module = 'web') {
         $arr['web'] = array(
-            'baseUrl' => zmf::config('baseurl'),
-            'hasLogin' => Yii::app()->user->isGuest ? 'false' : 'true',
-            'controller' => Yii::app()->getController()->id,
-            'action' => Yii::app()->getController()->getAction()->id,
-            'module' => $module,
-            'reputation' => 'false',
-            'loginHtml' => '',
-            'addCiUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/addCi'), //添加同义词
-            'delCiUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/delCi'), //删除同义词
-            'reportUrl' => zmf::config('domain') . Yii::app()->createUrl('/ajax/report'),
-            'delUploadImgUrl' => zmf::config('domain') . Yii::app()->createUrl('/attachments/delUploadImg'),
-            'csrfToken' => Yii::app()->request->csrfToken,
-            'currentSessionId' => Yii::app()->session->sessionID,
-            'allowImgTypes' => zmf::config('imgAllowTypes'),
-            'allowImgPerSize' => tools::formatBytes(zmf::config('imgMaxSize')),
-            'perAddImgNum' => zmf::config('imgUploadNum'),
-            'searchUrl' => zmf::config('domain') . Yii::app()->createUrl('/search/suggest'),
-            'searchPage' => zmf::config('domain') . Yii::app()->createUrl('/search/index'),
-            'commentsUrl' => zmf::config('domain') . Yii::app()->createUrl('/comments/lists'), //获取评论列表
-            'addCommentsUrl' => zmf::config('domain') . Yii::app()->createUrl('/comments/add'), //写评论
-            'feedbackUrl' => zmf::config('domain') . Yii::app()->createUrl('/feed/add'), //用户反馈
+            'baseUrl' => zmf::config('baseurl')         
         );
+        if(in_array(Yii::app()->getController()->id,array('chengyu')) && in_array(Yii::app()->getController()->getAction()->id, array('create','update','ci','content'))){
+            $arr['web']['csrfToken']=Yii::app()->request->csrfToken;
+            $arr['web']['addCiUrl']=zmf::config('domain') . Yii::app()->createUrl('/ajax/addCi');//添加同义词
+            $arr['web']['delCiUrl']=zmf::config('domain') . Yii::app()->createUrl('/ajax/delCi');//删除同义词
+        }
         $attrs = $arr[$type];
         $longHtml = '<script>var zmf={';
+        $jsArr=array();
         foreach ($attrs as $k => $v) {
-            $longHtml.=$k . ":'" . $v . "',";
+            $jsAr[].=$k . ":'" . $v . "'";
         }
+        $longHtml.=join(',',$jsAr);
         $longHtml.='};</script>';
         echo $longHtml;
     }
