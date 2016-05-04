@@ -25,13 +25,13 @@ class AppApi extends Controller {
 
     function init() {
         $this->startTime = microtime(true);
-//        self::checkApp();
+        self::checkApp();
         parent::init();
         $_pageSize = self::getValue('pageSize',0,2);
         $this->pageSize = $_pageSize ? $_pageSize : 30;
         $page = self::getValue('page',0,2);
         $this->page = $page ? $page : 1;
-        $this->usercode = tools::val('usercode', 1);
+//        $this->usercode = tools::val('usercode', 1);
         if ($this->page < 1) {
             $this->page = 1;
         }
@@ -136,7 +136,7 @@ class AppApi extends Controller {
         }
     }
 
-    public function log($content = '') {
+    public function log($content = null) {
         if (zmf::config('appRuntimeLog')) {
             if (!$content) {
                 $content = '##' . zmf::time() . '===' . ('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']) . PHP_EOL;
@@ -158,7 +158,7 @@ class AppApi extends Controller {
      * @return type
      */
     public function getValue($key, $notEmpty = false, $textonly = 1, $decode = 0) {
-        $return = zmf::filterInput($_GET[$key], $textonly);
+        $return = zmf::filterInput($_POST[$key], $textonly);
         $arr = array(
             'uid' => '作者ID',
             'content' => '内容',

@@ -110,7 +110,7 @@ class AppVersion extends CActiveRecord {
         if ($info['status'] != AppVersion::STATUS_ISOK) {
             $_info = AppVersion::model()->find(array(
                 'condition' => 'type=:t',
-                'select' => 'content',
+                'select' => 'downurl,content',
                 'order' => 'id DESC',
                 'params' => array(
                     ':t' => $type

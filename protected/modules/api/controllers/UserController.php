@@ -31,7 +31,7 @@ class UserController extends AppApi {
      * 用户反馈
      */
     public function actionFeedback() {
-        $this->checkUser();
+        //$this->checkUser();
         $uid = $this->uid;
         $attr['uid'] = $uid;
         $attr['type'] = $this->appPlatform;
