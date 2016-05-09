@@ -7,6 +7,81 @@ class Posts extends CActiveRecord {
     const STATUS_STAYCHECK = 2;
     const STATUS_DELED = 3;
     const STATUS_REDIRECT = 4; //重定向
+    
+    /**
+     * @return string the associated database table name
+     */
+    public function tableName() {
+        return '{{posts}}';
+    }
+
+    /**
+     * @return array validation rules for model attributes.
+     */
+    public function rules() {
+        // NOTE: you should only define rules for those attributes that
+        // will receive user inputs.
+        return array(
+            array('uid', 'default', 'setOnEmpty' => true, 'value' => zmf::uid()),
+            array('cTime,updateTime', 'default', 'setOnEmpty' => true, 'value' => zmf::now()),
+            array('status', 'default', 'setOnEmpty' => true, 'value' => Posts::STATUS_PASSED),
+            array('uid, title, content', 'required'),
+            array('uid, faceimg, classify, mapZoom, comments, top, hits, status, cTime, updateTime', 'numerical', 'integerOnly' => true),
+            array('title, tagids', 'length', 'max' => 255),
+            array('lat, long', 'length', 'max' => 50),
+            array('favors', 'length', 'max' => 11),
+            array('favorite', 'length', 'max' => 10),
+            // The following rule is used by search().
+            // @todo Please remove those attributes that should not be searched.
+            array('id, uid, title, content, faceimg, classify, lat, long, mapZoom, comments, favors, favorite, top, hits, tagids, status, cTime, updateTime', 'safe', 'on' => 'search'),
+        );
+    }
+
+    /**
+     * @return array relational rules.
+     */
+    public function relations() {
+        // NOTE: you may need to adjust the relation name and the related
+        // class name for the relations automatically generated below.
+        return array(
+        );
+    }
+
+    /**
+     * @return array customized attribute labels (name=>label)
+     */
+    public function attributeLabels() {
+        return array(
+            'id' => 'ID',
+            'uid' => '作者ID',
+            'title' => '标题',
+            'content' => '正文',
+            'faceimg' => '封面图',
+            'classify' => '分类',
+            'lat' => '纬度',
+            'long' => '经度',
+            'mapZoom' => '地图缩放级别',
+            'comments' => '评论数',
+            'favors' => '点赞数',
+            'favorite' => '收藏数',
+            'top' => '是否置顶',
+            'hits' => '阅读数',
+            'tagids' => '标签组',
+            'status' => 'Status',
+            'cTime' => '创建世界',
+            'updateTime' => '最近更新时间',
+        );
+    }
+
+    /**
+     * Returns the static model of the specified AR class.
+     * Please note that you should have this exact method in all your CActiveRecord descendants!
+     * @param string $className active record class name.
+     * @return Posts the static model class
+     */
+    public static function model($className = __CLASS__) {
+        return parent::model($className);
+    }
 
     public static function getSimpleInfo($key, $type = '', $atype = '') {
         if (is_array($key)) {

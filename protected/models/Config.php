@@ -71,5 +71,18 @@ class Config extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
+    
+    public static function navbar($type = 'admin') {
+        $arr = array(
+            'baseinfo' => '基本信息',
+            'upload' => '上传设置',
+            'base' => '全局设置',
+            'email' => '邮件设置',
+        );
+        if ($type == 'admin') {
+            return $arr;
+        }
+        return $arr[$type];
+    }
 
 }

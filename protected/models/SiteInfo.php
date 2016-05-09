@@ -120,5 +120,28 @@ class SiteInfo extends CActiveRecord {
     public static function model($className = __CLASS__) {
         return parent::model($className);
     }
+    
+    public static function exTypes($type) {
+        $arr = array(
+            'about' => '关于本站或关于我',
+            'author' => '关于本站创作者们',
+            'copyright' => '版权说明',
+            'datuhao' => '打土豪活动介绍',
+        );
+        if ($type == 'admin') {
+            return $arr;
+        }
+        return $arr[$type];
+    }
+
+    public static function getCodePost($code) {
+        $key = 'siteInfo-code-' . $code;
+        $info = zmf::getFCache($key);
+        if (!$info) {
+            $info = SiteInfo::model()->find('code=:code', array(':code' => $code));
+            zmf::setFCache($key, $info, 86400);
+        }
+        return $info;
+    }
 
 }

@@ -61,9 +61,9 @@ class Users extends CActiveRecord {
     public function attributeLabels() {
         return array(
             'id' => 'ID',
-            'username' => 'Username',
-            'password' => 'Password',
-            'truename' => 'Truename',
+            'username' => '昵称',
+            'password' => '密码',
+            'truename' => '姓名',
             'email' => 'Email',
             'groupid' => 'Groupid',
             'register_ip' => 'Register Ip',
@@ -71,7 +71,7 @@ class Users extends CActiveRecord {
             'register_time' => 'Register Time',
             'last_login_time' => 'Last Login Time',
             'login_count' => 'Login Count',
-            'status' => 'Status',
+            'status' => '状态',
             'email_status' => 'Email Status',
         );
     }
@@ -144,6 +144,46 @@ class Users extends CActiveRecord {
         } else {
             return $info;
         }
+    }
+    
+    public static function getOne($id) {
+        return Users::model()->findByPk($id);
+    }
+    
+    public static function userSex($return) {
+        $arr = array(
+            '0' => '未知',
+            '1' => '男',
+            '2' => '女',
+        );
+        if ($return == 'admin') {
+            return $arr;
+        }
+        return $arr[$return];
+    }
+    
+    public static function isAdmin($return) {
+        $arr = array(
+            '0' => '不是',
+            '1' => '是',
+        );
+        if ($return == 'admin') {
+            return $arr;
+        }
+        return $arr[$return];
+    }
+
+    public static function userStatus($return) {
+        $arr = array(
+            Posts::STATUS_NOTPASSED => '未激活',
+            Posts::STATUS_PASSED => '正常',
+            Posts::STATUS_STAYCHECK => '锁定',
+            Posts::STATUS_DELED => '删除',
+        );
+        if ($return == 'admin') {
+            return $arr;
+        }
+        return $arr[$return];
     }
 
 }

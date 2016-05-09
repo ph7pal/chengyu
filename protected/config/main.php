@@ -29,6 +29,10 @@ return array(
             'class' => 'application.modules.api.ApiModule',
             'defaultController' => 'index'
         ),
+        'admin' => array(
+            'class' => 'application.modules.admin.AdminModule',
+            'defaultController' => 'index'
+        ),
     ),
     'defaultController' => 'index',
     'components' => array(

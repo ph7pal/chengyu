@@ -40,6 +40,12 @@
         <!--div class="aside-mod">
             一些推荐
         </div-->
+        <div class="list-group">
+            <?php echo CHtml::link('版本管理',array('admin/appVersion'),array('class'=>'list-group-item'));?>
+            <?php echo CHtml::link('意见反馈',array('admin/feedback'),array('class'=>'list-group-item'));?>
+            <?php echo CHtml::link('系统日志',array('admin/checkLog','type'=>'system'),array('class'=>'list-group-item'));?>
+            <?php echo CHtml::link('APP日志',array('admin/checkLog','type'=>'appLogs'),array('class'=>'list-group-item'));?>
+        </div>
         <div class="aside-mod">
             <blockquote>
                 <p><?php echo zmf::config('shortTitle');?></p>

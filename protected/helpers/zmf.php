@@ -996,5 +996,75 @@ class zmf {
         preg_match_all($re[$charset], $str, $match);
         return $match;
     }
+    
+    /**
+     * 
+     * @param type $multi_array 二维数组
+     * @param type $sort_key 根据数组中某项排序
+     * @param type $sort 排序方式
+     * @return boolean
+     */
+    public static function multi_array_sort($multi_array, $sort_key, $sort = SORT_ASC) {
+        if (is_array($multi_array)) {
+            foreach ($multi_array as $row_array) {
+                if (is_array($row_array)) {
+                    $key_array[] = $row_array[$sort_key];
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+        array_multisort($key_array, $sort, $multi_array);
+        return $multi_array;
+    }
+    
+    /**
+     * 格式化显示文件大小
+     * @param int $size
+     * @return type
+     */
+    public static function formatBytes($size) {
+        $units = array('B', 'KB', 'MB', 'GB', 'TB');
+        for ($i = 0; $size >= 1024 && $i < 4; $i++)
+            $size /= 1024;
+        return round($size, 2) . $units[$i];
+    }
+    
+    public static function getThumbnailUrl($url, $size = '', $type = '',$prefix='c') {
+        //c132|c120|c180|c105|c360
+        $appStatus = self::config('appStatus'); 
+        $find=false;
+        if(strpos($url, 'inwedding.cn')!==false || strpos($url, 'hunlihunli.qiniudn.com')!==false){
+            $find=true;
+        }
+        $csize = ($size != '' && $find) ? '/'. $prefix . $size : '';
+        $reurl = '';
+        if (!$appStatus || $appStatus == '1') {//本地开发
+            if (in_array($type, array('avatar'))) {
+                $reurl = $url;
+            } else {
+                $reurl = $url . $csize;
+            }
+        } elseif ($appStatus == '2') {//线上测试
+            $reurl = $url . $csize;
+        } elseif ($appStatus == '3') {//线上正式
+            $reurl = $url . $csize;
+        }
+        return $reurl;
+    }
+    
+    /**
+     * 获取传参
+     * @param type $key，参数的键名
+     * @param type $ttype,传参类型,n:数字,t:文本
+     * @param type $textonly,是否纯文本
+     * @return boolean
+     */
+    public static function val($key, $textonly = 1) {
+        $return = zmf::filterInput(Yii::app()->request->getParam($key), $textonly);
+        return $return;
+    }
 
 }
