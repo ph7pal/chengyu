@@ -52,3 +52,31 @@ update pre_chengyu set secondWord=SUBSTR(title FROM 2 FOR 1),thirdWord=SUBSTR(ti
 alter table pre_chengyu_content add type tinyint(1) UNSIGNED not null DEFAULT 1;
 
 alter table pre_chengyu_ci add cTime int(10) UNSIGNED not null;
+
+DROP TABLE IF EXISTS `pre_chengyu_log`;
+CREATE TABLE `pre_chengyu_log` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `table` tinyint(1) unsigned NOT NULL COMMENT '所属表', 
+  `logid` int(10) unsigned NOT NULL COMMENT '所属对象ID',  
+  `action` tinyint(1) unsigned NOT NULL COMMENT '操作分类',  
+  `cTime` int(10) unsigned NOT NULL COMMENT '时间时间',  
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+table:
+1 词语表
+2 故事表
+3 关系表
+
+action：
+1 新增
+2 更新
+3 删除
+
+insert into pre_chengyu_log(`table`,logid,action,cTime) SELECT 1,id,1,cTime from pre_chengyu_content where `status`=1
+insert into pre_chengyu_log(`table`,logid,action,cTime) SELECT 1,id,3,cTime from pre_chengyu_content where `status`!=1
+
+insert into pre_chengyu_log(`table`,logid,action,cTime) SELECT 2,id,1,cTime from pre_chengyu_content where `status`=1
+insert into pre_chengyu_log(`table`,logid,action,cTime) SELECT 2,id,3,cTime from pre_chengyu_content where `status`!=1
+
+insert into pre_chengyu_log(`table`,logid,action,cTime) SELECT 3,id,1,cTime from pre_chengyu_ci
