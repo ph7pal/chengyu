@@ -56,11 +56,12 @@ class Chengyu extends CActiveRecord {
         $this->pinyin = tools::pinyin($this->title);
         $this->firstChar = substr($this->pinyin, 0, 1);
         $karr = zmf::chararray($this->title);
-        $this->firstWord = $karr[0];
-        $this->secondWord = $karr[1];
-        $this->thirdWord = $karr[2];
-        $this->fourthWord = $karr[3];
-        $this->lastWord = end($karr);
+        $_last=end($karr[0]);
+        $this->firstWord = $karr[0][0];
+        $this->secondWord = $karr[0][1];
+        $this->thirdWord = $karr[0][2];
+        $this->fourthWord = $karr[0][3];
+        $this->lastWord = $_last;
         return true;
     }
 

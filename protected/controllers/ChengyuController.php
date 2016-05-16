@@ -151,8 +151,10 @@ class ChengyuController extends Q {
         $this->check();
         if ($id) {
             $model = $this->loadModel($id);
+            $action='update';
         } else {
             $model = new Chengyu;
+            $action='add';
         }
         if (isset($_POST['Chengyu'])) {
             $model->attributes = $_POST['Chengyu'];
@@ -160,6 +162,8 @@ class ChengyuController extends Q {
                 if($id){
                     zmf::delCache("chengyu-detail-{$id}");
                 }
+                //记录日志
+                ChengyuLog::addLog('chengyu', $action, $model->id);
                 $this->redirect(array('view', 'id' => $model->id));
             }
         }
@@ -190,6 +194,7 @@ class ChengyuController extends Q {
         }
         $data = array(
             'info' => $info,
+            'model' => $info,
             'type' => $type,
             'relations' => $relations,
         );
@@ -230,10 +235,12 @@ class ChengyuController extends Q {
             if ($model === null) {
                 throw new CHttpException(404, 'The requested page does not exist.');
             }
+            $action='update';
         } else {
             $model = new ChengyuContent;
             $model->classify = $_classify;
             $model->cid = $id;
+            $action='add';
         }
         if (isset($_POST['ChengyuContent'])) {
             if ($model->classify == ChengyuContent::CLASSIFY_GUSHI) {
@@ -244,7 +251,8 @@ class ChengyuController extends Q {
             }
             $model->attributes = $_POST['ChengyuContent'];
             if ($model->save()) {
-                zmf::delCache("chengyu-detail-{$id}");
+                zmf::delCache("chengyu-detail-{$id}");                
+                ChengyuLog::addLog('content', $action, $model->id);
                 $this->redirect(array('view', 'id' => $model->cid));
             }
         }
@@ -271,6 +279,7 @@ class ChengyuController extends Q {
         }
         $model->updateByPk($id, array('status' => Posts::STATUS_DELED));
         zmf::delCache("chengyu-detail-{$id}");
+        ChengyuLog::addLog('content', 'del', $id);
         $this->redirect(array('chengyu/view', 'id' => $model->cid));
     }
 
@@ -286,6 +295,7 @@ class ChengyuController extends Q {
         }
         Chengyu::model()->updateByPk($id, array('status' => Posts::STATUS_DELED));
         zmf::delCache("chengyu-detail-{$id}");
+        ChengyuLog::addLog('chengyu', 'del', $id);
         $this->redirect(array('chengyu/index'));
     }
 

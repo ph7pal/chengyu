@@ -5,187 +5,56 @@
  */
 class PostController extends AppApi {
 
-    /**
-     * 成语列表
-     */
-    public function actionAll() {
-        $char = $this->getValue('char', 0, 1);
-        $where = '';
-        if ($char) {
-            $where.="firstChar='{$char}' AND ";
-        }
-        $sql = "SELECT id,title,fayin FROM {{chengyu}} WHERE {$where} `status`=" . Posts::STATUS_PASSED . ' ORDER BY hits DESC';
-        $this->getByPage(array('sql' => $sql), $pages, $posts);
-        $data = array(
-            'posts' => $posts,
-            'loadMore' => ($pages->itemCount > ($this->page * $this->pageSize)) ? 1 : 0,
-        );
-        $this->jsonOutPut(1, $data);
-    }
-
-    public function actionStory() {
-        $filter = $this->getValue('filter', 0, 2);
-        $order = $this->getValue('order', 0, 2);
-        $where = $orderBy = '';
-        if ($filter == 1) {
-            $where = " AND type='" . ChengyuContent::TYPE_ZC . "'";
-        } elseif ($filter == 2) {
-            $where = " AND type='" . ChengyuContent::TYPE_WL . "'";
-        }
-        if ($order == 2) {
-            $orderBy = 'c.hits';
-        } else {
-            $orderBy = 'cc.cTime';
-        }
-        $sql = "SELECT c.id,c.title,c.fayin,cc.content FROM {{chengyu}} c,{{chengyu_content}} cc WHERE cc.classify='" . ChengyuContent::CLASSIFY_GUSHI . "' {$where} AND cc.cid=c.id AND cc.status=" . Posts::STATUS_PASSED . " ORDER BY {$orderBy} DESC";
-        $this->getByPage(array('sql' => $sql), $pages, $posts);
-        if (!empty($posts)) {
-            foreach ($posts as $k => $v) {
-                $posts[$k]['content'] = zmf::subStr($v['content'], 280);
-            }
-            $posts = array_values($posts);
-        }
-        $data = array(
-            'posts' => $posts,
-            'loadMore' => ($pages->itemCount > ($this->page * $this->pageSize)) ? 1 : 0,
-        );
-        $this->output($data, $this->succCode);
-    }
-
-    public function actionDetail() {
-        $id = $this->getValue('id', 1, 2);
-        $detail = Chengyu::model()->findByPk($id);
-        if (!$detail || $detail['status'] != Posts::STATUS_PASSED) {
-            $this->output('您所查看的页面已不存在或已删除', $this->errorCode);
-        }
-        $jieshi = $chuchu = $liju = $tongyici = $fanyici = $gushi = array();
-        $jies = $detail->jieShis;
-        $chuChus = $detail->chuChus;
-        $liJus = $detail->liJus;
-        $tongyis = $detail->tongYiCis;
-        $fanyiis = $detail->fanYiCis;
-        $guShis = $detail->guShis;
-        if (!empty($jies)) {
-            foreach ($jies as $k => $_jies) {
-                $jieshi[$k]['content'] = $_jies['content'];
-                $jieshi[$k]['type'] = $_jies['type'];
-            }
-        }
-        if (!empty($chuChus)) {
-            foreach ($chuChus as $k => $_chuChu) {
-                $chuchu[$k]['content'] = $_chuChu['content'];
-                $chuchu[$k]['type'] = $_chuChu['type'];
-            }
-        }
-        if (!empty($liJus)) {
-            foreach ($liJus as $k => $_liJu) {
-                $liju[$k]['content'] = $_liJu['content'];
-                $liju[$k]['type'] = $_liJu['type'];
-            }
-        }
-        if (!empty($guShis)) {
-            foreach ($guShis as $k => $_guShi) {
-                $gushi[$k]['content'] = $_guShi['content'];
-                $gushi[$k]['type'] = $_guShi['type'];
-            }
-        }
-        if (!empty($tongyis)) {
-            foreach ($tongyis as $_tongyi) {
-                $_ciInfo = $_tongyi->chengyuInfo;
-                $tongyici[] = array('id' => $_ciInfo['id'], 'title' => $_ciInfo['title']);
-            }
-        }
-        if (!empty($fanyiis)) {
-            foreach ($fanyiis as $_fanyii) {
-                $_ciInfo = $_fanyii->chengyuInfo;
-                $fanyici[] = array('id' => $_ciInfo['id'], 'title' => $_ciInfo['title']);
-            }
-        }
-        $relatedWords = Chengyu::getRelatedWords($detail->title, $id);
-        $wordArr = zmf::chararray($detail['title']);
-        $wordArr = $wordArr[0];
-        $data = array(
-            'id' => $id,
-            'title' => $detail->title,
-            'fayin' => $detail->fayin,
-            'title_tw' => $detail->title_tw,
-            'yufa' => $detail->yufa,
-            'jieshi' => $jieshi,
-            'chuchu' => $chuchu,
-            'liju' => $liju,
-            'tongyici' => $tongyici,
-            'fanyici' => $fanyici,
-            'gushi' => $gushi,
-            'relatedWords' => $relatedWords,
-            'wordArr' => $wordArr,
-        );
-        $this->output($data, $this->succCode);
-    }
-
-    public function actionSearch() {
-        $keyword = $this->getValue('keyword', 0, 1);
+    public function actionSyncAll() {
+        $sql = "SELECT `table`,logid,action FROM {{chengyu_log}} WHERE cTime>=:time";
+        $ckInfo = $this->getByPage(array('sql' => $sql, 'pageSize' => $this->pageSize, 'page' => $this->page, 'bindValues' => array(':time' => $this->tableVersion)));
+        $logs = $ckInfo['posts'];
         $posts = array();
-        if ($keyword != '') {
-            //只取8个字符
-            $keyword = zmf::subStr($keyword, 8, 0, '');
-            //转换为简体
-            $keyword = zmf::twTozh($keyword);
-            $karr = zmf::chararray($keyword);
-            $karr = $karr[0];
-            foreach ($karr as $char) {
-                $conditionArr[] = " (title LIKE '%{$char}%') ";
+        if (!empty($logs)) {
+            foreach ($logs as $log) {
+                $_action = ChengyuLog::exActions($log['action']);
+                if ($_action != 'del') {
+                    $_action = 'update';
+                }
+                $_table = ChengyuLog::exTables($log['table']);
+                $posts[$_table][$_action][] = $log['logid'];
             }
-            $conStr = join('AND', $conditionArr);
-            $sql = "SELECT id,title,fayin FROM {{chengyu}} WHERE ({$conStr}) AND `status`=" . Posts::STATUS_PASSED;
-            $this->getByPage(array('sql' => $sql), $pages, $posts);
-            if ($this->page == 1) {
-                SearchRecords::checkAndUpdate($keyword);
-            }
+        }
+        $chengyuIds = join(',', array_filter(array_unique($posts['chengyu']['update'])));
+        $ciIds = join(',', array_filter(array_unique($posts['ci']['update'])));
+        $contentIds = join(',', array_filter(array_unique($posts['content']['update'])));
+        $posts['chengyu']['del'] = $posts['chengyu']['del'] ? join(',', array_filter(array_unique($posts['chengyu']['del']))) : '';
+        $posts['ci']['del'] = $posts['ci']['del'] ? join(',', array_filter(array_unique($posts['ci']['del']))) : '';
+        $posts['content']['del'] = $posts['content']['del'] ? join(',', array_filter(array_unique($posts['content']['del']))) : '';
+        if ($chengyuIds != '') {
+            $_sql = "SELECT id,title,title_tw,pinyin,firstChar,yufa,fayin,firstWord,secondWord,thirdWord,fourthWord,lastWord,cTime FROM {{chengyu}} WHERE id IN({$chengyuIds})";
+            $_chengyu = Yii::app()->db->createCommand($_sql)->queryAll();
+            $posts['chengyu']['update'] = !empty($_chengyu) ? $_chengyu : array();
+        } else {
+            $posts['chengyu']['update'] = array();
+        }
+        if ($contentIds != '') {
+            $_sql = "SELECT id,cid,content,classify,type,cTime FROM {{chengyu_content}} WHERE id IN({$contentIds})";
+            $_content = Yii::app()->db->createCommand($_sql)->queryAll();
+            $posts['content']['update'] = !empty($_content) ? $_content : array();
+        } else {
+            $posts['content']['update'] = array();
+        }
+        if ($ciIds != '') {
+            $_sql = "SELECT id,cid,tocid,classify,cTime FROM {{chengyu_ci}} WHERE id IN({$ciIds})";
+            $_ci = Yii::app()->db->createCommand($_sql)->queryAll();
+            $posts['ci']['update'] = !empty($_ci) ? $_ci : array();
+        } else {
+            $posts['ci']['update'] = array();
         }
         $data = array(
             'posts' => $posts,
-            'loadMore' => ($pages->itemCount > ($this->page * $this->pageSize)) ? 1 : 0,
+            'loadMore' => count($posts) == $this->pageSize ? 1 : 0
         );
+        if(!$data['loadMore']){
+            $this->currentVersion= zmf::now();
+        }
         $this->output($data, $this->succCode);
-    }
-
-    /**
-     * 同步所有成语
-     */
-    public function actionSyncall() {
-        $sql = "SELECT id, title, title_tw, pinyin, firstChar, yufa, cTime FROM {{chengyu}} WHERE cTime>='{$this->tableVersion}' AND `status`=" . Posts::STATUS_PASSED . ' ORDER BY cTime DESC';
-        $this->getByPage(array('sql' => $sql), $pages, $posts);
-        $data = array(
-            'posts' => $posts,
-            'loadMore' => ($pages->itemCount > ($this->page * $this->pageSize)) ? 1 : 0,
-        );
-        $this->jsonOutPut(1, $data);
-    }
-
-    /**
-     * 同步所有内容，包括故事、例句等
-     */
-    public function actionSynccontent() {
-        $sql = "SELECT * FROM {{chengyu_content}} WHERE cTime>='{$this->tableVersion}' AND `status`=" . Posts::STATUS_PASSED . ' ORDER BY cTime DESC';
-        $this->getByPage(array('sql' => $sql), $pages, $posts);
-        $data = array(
-            'posts' => $posts,
-            'loadMore' => ($pages->itemCount > ($this->page * $this->pageSize)) ? 1 : 0,
-        );
-        $this->jsonOutPut(1, $data);
-    }
-
-    /**
-     * 同步所有同义词关系
-     */
-    public function actionSyncrelation() {
-        $sql = "SELECT * FROM {{chengyu_ci}} WHERE cTime>='{$this->tableVersion}' AND `status`=" . Posts::STATUS_PASSED . ' ORDER BY cTime DESC';
-        $this->getByPage(array('sql' => $sql), $pages, $posts);
-        $data = array(
-            'posts' => $posts,
-            'loadMore' => ($pages->itemCount > ($this->page * $this->pageSize)) ? 1 : 0,
-        );
-        $this->jsonOutPut(1, $data);
     }
 
 }

@@ -7,6 +7,19 @@ class zmf {
         print_r($data);
         echo '</pre>';
     }
+    
+    /**
+     * file_put_contents到某个文件下
+     * @param type $msg
+     * @param type $arr
+     */
+    public static function fp($msg, $arr = 0) {
+        if ($arr) {
+            file_put_contents(Yii::app()->basePath . '/runtime/log.txt', var_export($msg, true) . PHP_EOL, FILE_APPEND);
+        } else {
+            file_put_contents(Yii::app()->basePath . '/runtime/log.txt', $msg . PHP_EOL, FILE_APPEND);
+        }
+    }
 
     public static function config($type) {
         if ($type == 'authcode') {

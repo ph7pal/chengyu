@@ -25,7 +25,7 @@ class AppApi extends Controller {
 
     function init() {
         $this->startTime = microtime(true);
-        self::checkApp();
+        //self::checkApp();
         parent::init();
         $_pageSize = self::getValue('pageSize',0,2);
         $this->pageSize = $_pageSize ? $_pageSize : 30;
@@ -176,28 +176,23 @@ class AppApi extends Controller {
         }
         return $return;
     }
-
-    public function getByPage($params, &$pages, &$posts) {
+    
+    public function getByPage($params) {
         $sql = $params['sql'];
-        $pageSize = $this->pageSize;
-        $page = $this->page;
         if (!$sql) {
             return false;
         }
-
-        $criteria = new CDbCriteria();
-//        $_sql = preg_replace('/select (.+?) from/i', 'SELECT COUNT(*) AS count FROM', $sql);
-//        $_total = Yii::app()->db->createCommand($_sql)->queryRow();
-//        $count = $_total['count'];
-        $total = Yii::app()->db->createCommand($sql)->query();
-        $count = $total->rowCount;
-        $pages = new CPagination($count);
-        $pages->pageSize = $pageSize;
-        $pages->applyLimit($criteria);
+        $pageSize = (is_numeric($params['pageSize']) && $params['pageSize'] > 0) ? $params['pageSize'] : $this->pageSize;
+        $page = (is_numeric($params['page']) && $params['page'] > 1) ? $params['page'] : $this->page;
+        $bindValues=!empty($params['bindValues']) ? $params['bindValues'] : array();
+        $bindValues[':offset']=($page-1) * $pageSize;
+        $bindValues[':limit']=$pageSize;
         $com = Yii::app()->db->createCommand($sql . " LIMIT :offset,:limit");
-        $com->bindValue(':offset', intval(($page - 1) * $pageSize));
-        $com->bindValue(':limit', intval($pageSize));
+        $com->bindValues($bindValues);        
         $posts = $com->queryAll();
+        return array(
+            'posts' => $posts
+        );
     }
 
     /**

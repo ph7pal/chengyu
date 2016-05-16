@@ -66,6 +66,7 @@ class AjaxController extends Q {
         $model->attributes = $attr;
         if ($model->save()) {
             zmf::delCache("chengyu-detail-{$keyid}");
+            ChengyuLog::addLog('ci', 'add', $model->id);
             $this->jsonOutPut(1, '已添加');
         } else {
             $this->jsonOutPut(0, '添加失败');
@@ -98,6 +99,7 @@ class AjaxController extends Q {
         }        
         if (ChengyuCi::model()->deleteByPk($_info['id'])) {
             zmf::delCache("chengyu-detail-{$keyid}");
+            ChengyuLog::addLog('ci', 'del', $_info['id']);
             $this->jsonOutPut(1, '已删除');
         } else {
             $this->jsonOutPut(0, '删除失败');
