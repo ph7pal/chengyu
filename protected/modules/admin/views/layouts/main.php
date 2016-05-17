@@ -27,8 +27,6 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php echo $this->userInfo['truename'];?> <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><?php echo CHtml::link('新增文章', array('posts/create'),array('role'=>'menuitem')); ?></li>
-                        <li class="divider"></li>
                         <li><?php echo CHtml::link('站点首页',  zmf::config('baseurl'),array('role'=>'menuitem'));?></li>
                         <li class="divider"></li>
                         <li><?php echo CHtml::link('退出',array('/site/logout'),array('role'=>'menuitem'));?></li>

@@ -134,7 +134,7 @@ class Admin extends Controller {
         );
         $attr['system'] = array(
             'title' => '系统',
-            'url' => Yii::app()->createUrl('admin/config/index'),
+            'url' => Yii::app()->createUrl('admin/config/navbar'),
             'active' => in_array($c, array('site','config'))
         );
         foreach ($attr as $k => $v) {

@@ -8,10 +8,15 @@
  * @copyright Copyright©2015 阿年飞少 
  * @datetime 2015-9-6  16:37:42 
  */
-$this->breadcrumbs = array(
-    '首页'=>array('index/index'),
-    '管理中心'=>array('admin/index'),
-    '小工具'
+$this->menu=array(
+    '日志列表'=>array(
+        'link'=>array('config/navbar'),
+        'active'=>true
+    ),
+    '基本设置'=>array(
+        'link'=>array('config/index'),
+        'active'=>false
+    ),
 );
 $urlType='';
 switch ($type) {

@@ -114,7 +114,8 @@ body{
     border-color: #FFF0F0;
 }
 .settings-main-box{
-    padding: 15px
+    padding: 15px;
+    word-break: break-all
 }
 .settings-main-box h2{
     padding: 0 8px 20px;

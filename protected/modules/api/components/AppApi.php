@@ -25,7 +25,7 @@ class AppApi extends Controller {
 
     function init() {
         $this->startTime = microtime(true);
-        //self::checkApp();
+        self::checkApp();
         parent::init();
         $_pageSize = self::getValue('pageSize',0,2);
         $this->pageSize = $_pageSize ? $_pageSize : 30;

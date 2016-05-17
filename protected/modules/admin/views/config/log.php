@@ -8,10 +8,15 @@
  * @copyright Copyright©2015 阿年飞少 
  * @datetime 2015-7-9  18:05:15 
  */
-$this->breadcrumbs = array(
-    '首页'=>array('index/index'),
-    '管理中心'=>array('admin/index'),
-    '小工具'
+$this->menu=array(
+    '日志列表'=>array(
+        'link'=>array('config/navbar'),
+        'active'=>true
+    ),
+    '基本设置'=>array(
+        'link'=>array('config/index'),
+        'active'=>false
+    ),
 );
 if($_GET['type']=='app'){
     $delAction='delApp';
@@ -25,4 +30,5 @@ if($_GET['type']=='app'){
     $delAction='delAppLog';
 }
 ?>
-<?php zmf::test($content);?>
+
+<?php echo nl2br($content);?>
