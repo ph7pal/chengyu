@@ -80,3 +80,15 @@ insert into pre_chengyu_log(`table`,logid,action,cTime) SELECT 2,id,1,cTime from
 insert into pre_chengyu_log(`table`,logid,action,cTime) SELECT 2,id,3,cTime from pre_chengyu_content where `status`!=1
 
 insert into pre_chengyu_log(`table`,logid,action,cTime) SELECT 3,id,1,cTime from pre_chengyu_ci
+
+DROP TABLE IF EXISTS `pre_chapters`;
+CREATE TABLE `pre_chapters` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `chapter` varchar(255) NOT NULL COMMENT '章节标题',  
+  `cid` int(10) unsigned NOT NULL COMMENT '成语ID',  
+  `startId` int(10) unsigned NOT NULL COMMENT '起始成语ID',  
+  `endId` int(10) unsigned NOT NULL COMMENT '结束成语ID',  
+  `readId` int(10) unsigned NOT NULL COMMENT '已读成语ID',  
+  `rows` int(10) unsigned NOT NULL COMMENT '章节条数',  
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
